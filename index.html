@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Thomas's personal project playground — simulators, browser games, art, and ideas." />
+  <title>Thomas's Playground</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #121a2f;
+      --panel2: #18233d;
+      --text: #eef4ff;
+      --muted: #9fb0cd;
+      --accent: #67e8f9;
+      --accent2: #a78bfa;
+      --border: rgba(255,255,255,.09);
+      --shadow: 0 18px 50px rgba(0,0,0,.28);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 10%, rgba(103,232,249,.12), transparent 30%),
+        radial-gradient(circle at 85% 0%, rgba(167,139,250,.13), transparent 28%),
+        var(--bg);
+      min-height: 100vh;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { width: min(1120px, calc(100% - 32px)); margin: 0 auto; }
+    header {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 24px 0;
+    }
+    .brand { font-weight: 800; letter-spacing: .2px; }
+    nav { display: flex; gap: 18px; color: var(--muted); font-size: 14px; }
+    nav a:hover { color: white; }
+    .hero { padding: 86px 0 58px; max-width: 760px; }
+    .eyebrow {
+      color: var(--accent); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .14em;
+    }
+    h1 { font-size: clamp(44px, 8vw, 78px); line-height: .98; margin: 14px 0 20px; letter-spacing: -0.045em; }
+    .hero p { color: var(--muted); font-size: 19px; line-height: 1.7; max-width: 680px; }
+    .section-title { margin: 50px 0 18px; font-size: 27px; }
+    .grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 20px;
+    }
+    .card {
+      position: relative; overflow: hidden;
+      min-height: 240px; padding: 26px;
+      background: linear-gradient(145deg, rgba(24,35,61,.95), rgba(18,26,47,.92));
+      border: 1px solid var(--border); border-radius: 24px; box-shadow: var(--shadow);
+      transition: transform .2s ease, border-color .2s ease;
+    }
+    .card.live:hover { transform: translateY(-4px); border-color: rgba(103,232,249,.35); }
+    .icon { font-size: 34px; margin-bottom: 30px; }
+    .tag {
+      display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+      padding: 7px 10px; border-radius: 999px; color: #c8f7ff; background: rgba(103,232,249,.11);
+      margin-bottom: 10px;
+    }
+    .tag.soon { color: #ddd4ff; background: rgba(167,139,250,.12); }
+    .card h3 { margin: 6px 0 9px; font-size: 25px; }
+    .card p { margin: 0; color: var(--muted); line-height: 1.6; }
+    .action { margin-top: 22px; font-weight: 800; color: var(--accent); }
+    .coming { color: #c4b5fd; }
+    .mini-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 72px; }
+    .mini {
+      padding: 22px; border: 1px solid var(--border); border-radius: 20px; background: rgba(18,26,47,.72);
+    }
+    .mini h4 { margin: 8px 0; font-size: 18px; }
+    .mini p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+    footer { border-top: 1px solid var(--border); color: var(--muted); padding: 28px 0 40px; font-size: 14px; }
+    @media (max-width: 760px) {
+      nav { display: none; }
+      .hero { padding-top: 60px; }
+      .grid, .mini-grid { grid-template-columns: 1fr; }
+      .card { min-height: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">Thomas's Playground</div>
+      <nav>
+        <a href="#projects">Projects</a>
+        <a href="#more">More</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Personal projects · experiments · fun</div>
+        <h1>Things I build, test, and enjoy.</h1>
+        <p>A home for my simulators, browser games, creative experiments, artwork, and ideas. Everything here is a personal hobby project.</p>
+      </section>
+
+      <section id="projects">
+        <h2 class="section-title">Featured projects</h2>
+        <div class="grid">
+          <a class="card live" href="https://hhhthomashhh.github.io/Retirement-simulatoor/" target="_blank" rel="noopener">
+            <div class="icon">📊</div>
+            <span class="tag">Live</span>
+            <h3>Retirement Simulator</h3>
+            <p>An interactive retirement planning simulator for exploring different assumptions, spending plans, and market outcomes.</p>
+            <div class="action">Open simulator →</div>
+          </a>
+
+          <div class="card">
+            <div class="icon">🕵️</div>
+            <span class="tag soon">Coming next</span>
+            <h3>Echo Heist</h3>
+            <p>A time-loop stealth and puzzle game where your previous actions become Echoes that help you pull off the next part of the heist.</p>
+            <div class="action coming">Publishing soon</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="more">
+        <h2 class="section-title">More to come</h2>
+        <div class="mini-grid">
+          <div class="mini"><div>🎮</div><h4>Games</h4><p>Browser games and interactive experiments.</p></div>
+          <div class="mini"><div>🎨</div><h4>Art</h4><p>Artwork, visual experiments, and creative projects.</p></div>
+          <div class="mini"><div>✍️</div><h4>Blog & Ideas</h4><p>Thoughts, notes, things I learn, and ideas worth sharing.</p></div>
+        </div>
+      </section>
+    </main>
+
+    <footer>Built for fun · Hosted on GitHub Pages</footer>
+  </div>
+</body>
+</html>
