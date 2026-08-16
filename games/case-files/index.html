@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1015">
+<title>CASE FILES — Mini Detective Mysteries</title>
+<style>
+:root{
+  --bg:#090d11; --panel:#111820; --panel2:#17130f; --ink:#f3eadc;
+  --muted:#aeb7bf; --gold:#d7aa54; --gold2:#8b642d; --red:#7b221b;
+  --line:rgba(215,170,84,.28); --shadow:0 20px 60px rgba(0,0,0,.38);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(88,66,31,.18),transparent 34rem),
+    linear-gradient(#090d11,#070a0d 60%,#080b0e);
+  min-height:100vh;
+}
+a{color:inherit}
+.shell{max-width:1180px;margin:auto;padding:24px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:4px 0 22px}
+.home{text-decoration:none;color:#c8d0d6;font-size:14px}
+.home:hover{color:white}
+.series-mark{display:flex;align-items:center;gap:12px}
+.seal{width:42px;height:42px;border:1px solid var(--gold2);display:grid;place-items:center;transform:rotate(45deg);background:#11100e}
+.seal span{transform:rotate(-45deg);font-family:Georgia,serif;color:var(--gold);font-weight:700}
+.series-mark strong{font-family:Georgia,serif;letter-spacing:.12em;font-size:15px;color:#e6c57e}
+.hero{
+  position:relative;overflow:hidden;min-height:480px;border:1px solid var(--line);border-radius:24px;
+  background:
+   linear-gradient(90deg,rgba(6,9,12,.96) 0%,rgba(6,9,12,.82) 42%,rgba(6,9,12,.28) 72%,rgba(6,9,12,.55) 100%),
+   url("assets/cover.svg") center/cover no-repeat;
+  box-shadow:var(--shadow);display:flex;align-items:center;
+}
+.hero::after{content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.04);border-radius:24px;pointer-events:none}
+.hero-copy{position:relative;z-index:2;width:min(610px,100%);padding:56px}
+.eyebrow{color:var(--gold);letter-spacing:.19em;font-weight:800;font-size:12px}
+h1{font-family:Georgia,serif;font-size:clamp(48px,8vw,90px);line-height:.88;margin:12px 0 16px;letter-spacing:.015em}
+.tagline{font-family:Georgia,serif;font-style:italic;color:#e1c68d;font-size:20px;margin-bottom:18px}
+.hero p{max-width:54ch;color:#c5cbd0;line-height:1.7;font-size:16px}
+.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 18px;border-radius:10px;text-decoration:none;font-weight:800;font-size:14px;border:1px solid var(--gold2);background:linear-gradient(#d7aa54,#b58135);color:#181108;box-shadow:0 9px 22px rgba(0,0,0,.24)}
+.btn.secondary{background:rgba(10,14,18,.62);color:#e6d3ad}
+.section{padding:54px 0 8px}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px}
+.section h2{font-family:Georgia,serif;font-size:32px;margin:0}
+.section .sub{color:var(--muted);margin-top:7px}
+.case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.case{position:relative;overflow:hidden;border:1px solid var(--line);background:linear-gradient(155deg,#151b21,#0e1318 68%);border-radius:18px;min-height:390px;box-shadow:0 12px 35px rgba(0,0,0,.22)}
+.case.featured{grid-column:span 2}
+.case-art{height:205px;background-position:center;background-size:cover;position:relative}
+.case-art::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent,rgba(14,19,24,.95))}
+.case.featured .case-art{background-image:url("assets/cover.svg")}
+.case-body{padding:0 22px 22px}
+.number{font-size:11px;letter-spacing:.18em;color:var(--gold);font-weight:900}
+.case h3{font-family:Georgia,serif;font-size:27px;margin:6px 0 8px}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 16px}
+.chip{border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:6px 9px;font-size:11px;color:#c7cfd5;background:rgba(255,255,255,.03)}
+.desc{color:#aeb7bf;line-height:1.55;font-size:14px;min-height:44px}
+.case-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:18px}
+.play{text-decoration:none;color:#161008;background:#d7aa54;padding:10px 14px;border-radius:9px;font-weight:900;font-size:13px}
+.status{font-size:11px;text-transform:uppercase;letter-spacing:.13em;color:#a7afb6}
+.status.solved{color:#8ed5ad}
+.placeholder{background:linear-gradient(145deg,#13171b,#0c0f12);display:flex;flex-direction:column;justify-content:flex-end}
+.placeholder::before{content:"CLASSIFIED";position:absolute;top:32px;right:-42px;transform:rotate(35deg);border:2px solid rgba(123,34,27,.55);color:rgba(189,80,66,.68);font:900 16px Georgia,serif;letter-spacing:.13em;padding:8px 50px}
+.placeholder .case-body{padding-top:80px}
+.placeholder h3{color:#aab1b6}
+.placeholder .desc{color:#6f7880}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+.how div{border-top:1px solid var(--line);padding:18px 4px 0}
+.how b{font-family:Georgia,serif;color:#e3c17a}
+.how p{color:#939da5;line-height:1.55;font-size:14px}
+footer{border-top:1px solid rgba(255,255,255,.07);margin-top:54px;padding:26px 0 12px;color:#727d85;font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+@media(max-width:820px){
+  .shell{padding:16px} .hero{min-height:530px;background-position:62% center}
+  .hero-copy{padding:34px 26px;background:linear-gradient(90deg,rgba(6,9,12,.92),rgba(6,9,12,.62),transparent)}
+  .case-grid{grid-template-columns:1fr} .case.featured{grid-column:auto}
+  .how{grid-template-columns:1fr} .topbar{align-items:flex-start}
+}
+@media(max-width:520px){
+  h1{font-size:52px} .hero{min-height:500px} .hero-copy{padding:30px 20px}
+  .tagline{font-size:17px} .series-mark strong{font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="series-mark"><div class="seal"><span>CF</span></div><strong>CASE FILES</strong></div>
+    <a class="home" href="/">← Back to Thomas' Home</a>
+  </div>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">INTERACTIVE MINI DETECTIVE SERIES</div>
+      <h1>CASE<br>FILES</h1>
+      <div class="tagline">You have the evidence. Find the truth.</div>
+      <p>Short, self-contained mysteries built around fair deduction. Examine the scene, question suspects, reconstruct the timeline, and make your accusation only when the evidence supports it.</p>
+      <div class="actions">
+        <a class="btn" href="case-001/">Open Case 001 →</a>
+        <a class="btn secondary" href="#cases">Browse Case Files</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cases">
+    <div class="section-head">
+      <div>
+        <h2>Active Case Files</h2>
+        <div class="sub">Each case is designed to be solved in roughly 10–20 minutes.</div>
+      </div>
+    </div>
+
+    <div class="case-grid">
+      <article class="case featured">
+        <div class="case-art"></div>
+        <div class="case-body">
+          <div class="number">CASE 001</div>
+          <h3>The Missing Diamond</h3>
+          <div class="meta">
+            <span class="chip">Difficulty ★★★☆☆</span>
+            <span class="chip">10–20 min</span>
+            <span class="chip">Theft</span>
+            <span class="chip">Timeline deduction</span>
+          </div>
+          <div class="desc">The Blue Meridian disappears from a locked display at Ashcroft House. Four people have motive, but only one suspect fits the exact evidence window.</div>
+          <div class="case-footer">
+            <span class="status" id="case001status">Unsolved</span>
+            <a class="play" href="case-001/">PLAY CASE 001</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="case placeholder">
+        <div class="case-body">
+          <div class="number">CASE 002</div>
+          <h3>File Sealed</h3>
+          <div class="desc">A new investigation will appear here when the next case is ready.</div>
+          <div class="case-footer"><span class="status">Coming Soon</span></div>
+        </div>
+      </article>
+
+      <article class="case placeholder">
+        <div class="case-body">
+          <div class="number">CASE 003</div>
+          <h3>File Sealed</h3>
+          <div class="desc">Future cases will use the same investigation, interview, evidence and deduction system.</div>
+          <div class="case-footer"><span class="status">Coming Soon</span></div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>How a Case Works</h2>
+    <div class="how">
+      <div><b>01 — Investigate</b><p>Search the scene and collect objective evidence. Important clues are preserved exactly as found.</p></div>
+      <div><b>02 — Deduce</b><p>Compare statements with timestamps, physical evidence and alibis. Red herrings have explanations.</p></div>
+      <div><b>03 — Accuse</b><p>Name the culprit, method and timeline. A correct solution should follow from evidence—not guessing.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>CASE FILES · Mini Detective Mysteries</span>
+    <span>Part of Thomas' personal games collection</span>
+  </footer>
+</div>
+<script>
+try {
+  if (localStorage.getItem('case001_solved') === 'true') {
+    const el = document.getElementById('case001status');
+    el.textContent = '✓ Solved';
+    el.classList.add('solved');
+  }
+} catch(e) {}
+</script>
+</body>
+</html>
