@@ -1,6 +1,6 @@
 const evidence = {
   display:{title:'Display lock & substitute',desc:'The brass lock and hinges are undamaged. The stone in the case is an 18.04 ct blue cubic zirconia measuring 18.28 × 13.46 × 8.22 mm.',timeline:'9:12 PM — The display is opened under supervision. The stone is confirmed as a cubic zirconia substitute.'},
-  residue:{title:'Fluorescent residue',desc:'Under UV light, a tiny green fluorescent speck is visible on the underside of the substitute stone. Its spectrum matches the numbered tamper lacquer used in Evelyn’s appraisal kit. One lacquer dot is missing from that kit.',timeline:null},
+  residue:{title:'Fluorescent residue',desc:'Under UV light, a tiny green fluorescent residue is trapped in a nick on the substitute’s girdle. Its spectrum matches the immersion oil used in Evelyn’s refractometer; that oil is not used on the display or by the photographer.',timeline:null},
   camera:{title:'Hallway security footage',desc:'Continuous hallway footage begins at 8:45 PM. From 8:45 to 9:06, nobody enters or leaves the study. The recording has no missing segment or clock jump.',timeline:'8:45 PM — Hallway camera watch begins. No entry or exit occurs before the 9:06 discovery.'},
   desk:{title:'8:18 appraisal record',desc:'Evelyn’s gem tester logged the genuine Blue Meridian at 8:18:42 PM. The record includes laser inscription BM-1847 and its characteristic feather inclusion.',timeline:'8:18:42 PM — The genuine Blue Meridian is electronically verified.'},
   door:{title:'Door & window inspection',desc:'The study door has no tool marks. The single window is latched from inside and its old paint seal is unbroken. There is no usable second entrance.',timeline:null},
@@ -60,7 +60,7 @@ function inspect(id){
   if(id==='display'){
     addEvidence('display');
     addEvidence('residue');
-    openModal('<h2>Display case</h2><p>The lock and hinges are undamaged. The displayed stone tests as cubic zirconia and measures <b>18.28 × 13.46 × 8.22 mm</b>.</p><p>Under UV light, a tiny green fluorescent speck is visible on the underside of the stone.</p>');
+    openModal('<h2>Display case</h2><p>The lock and hinges are undamaged. The displayed stone tests as cubic zirconia and measures <b>18.28 × 13.46 × 8.22 mm</b>.</p><p>Under UV light, green fluorescent residue is trapped in a tiny nick on the stone’s girdle.</p>');
   }
   if(id==='camera'){
     addEvidence('camera');
