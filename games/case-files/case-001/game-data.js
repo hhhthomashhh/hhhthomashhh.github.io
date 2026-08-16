@@ -1,67 +1,105 @@
 const evidence = {
-  display:{title:'Display lock & replica',desc:'The brass lock is undamaged: no fresh scratches, bending, or pick marks. The stone now in the case is a 18.1 ct blue cubic zirconia cut to closely match the Blue Meridian.',timeline:'9:12 PM — The display is opened under supervision. The lock is undamaged; the stone is confirmed as a CZ replica.'},
-  camera:{title:'Hallway security footage',desc:'Continuous footage begins at exactly 8:45 PM. From 8:45 to 9:06, nobody enters or leaves the study. There is no missing footage or clock discontinuity.',timeline:'8:45 PM — Hallway camera watch begins. No entry or exit occurs until 9:06.'},
-  desk:{title:'Appraisal printout',desc:'Evelyn’s gem tester logged the Blue Meridian at 8:18:42 PM. The report includes its laser inscription BM-1847 and its characteristic internal feather inclusion.',timeline:'8:18 PM — Evelyn electronically verifies the real Blue Meridian: inscription BM-1847 and matching inclusion.'},
-  door:{title:'Door & window inspection',desc:'The study door has no tool marks. The single window is latched from inside and its old paint seal is unbroken. There is no second entrance.',timeline:null},
-  tripod:{title:'Tripod collar trace',desc:'A tiny blue velvet fibre is trapped inside the thread of the photographer’s tripod collar, along with a speck of clear display wax. Both match materials from the diamond’s removable display pin.',timeline:null},
-  raw:{title:'8:27 RAW photograph',desc:'Maya’s camera stores an unedited RAW frame timestamped 8:27:11 PM. The stone is already the replica: the Blue Meridian’s distinctive feather inclusion is absent, and the pavilion facet pattern differs from the 8:18 appraisal image.',timeline:'8:27 PM — Maya’s RAW photograph shows that the replica is already in the case.'},
-  call:{title:'Evelyn’s call log',desc:'At 8:24:36 PM Evelyn received a 214-second call from the insurer and stepped into the hall. Two witnesses confirm she remained there until 8:28:10. Maya stayed in the study with the display open for the close-up shot.',timeline:'8:24–8:28 PM — Evelyn is continuously visible in the hallway on an insurer call; Maya remains alone in the study with the display open for photography.'},
-  order:{title:'Prop-stone order',desc:'A receipt in Maya’s equipment folio shows a rush order placed four days ago for a custom 18 ct blue cubic zirconia, dimensions matched to the Blue Meridian’s published exhibition specifications.',timeline:'Four days earlier — Maya orders a custom blue CZ matching the exhibition dimensions.'},
-  message:{title:'Collector message',desc:'A printed message tucked into Maya’s invoice folder reads: “Authentic BM only. 240 cash on delivery. No replica, no deal.” The sender uses the same alias listed on a prior photography payment record.',timeline:'Two days earlier — Maya receives a cash offer contingent on delivering the authentic Blue Meridian.'},
-  adrian:{title:'Adrian’s wine theft',desc:'Adrian admits he lied about his whereabouts because he stole a rare bottle from the cellar. An interior cellar camera shows him continuously from 8:23:18 to 8:29:02, and the inventory sensor logs the bottle removal at 8:25:44. The bottle is later found in his car. Suspicious, but unrelated to the diamond.',timeline:'8:23–8:29 PM — Cellar video continuously shows Adrian; at 8:25:44 he removes a rare wine bottle.'},
-  felix:{title:'Felix rehearsal video',desc:'A continuous ballroom rehearsal recording shows Felix on stage from 8:22:03 to 8:31:49. His fake gems are red acrylic stage props and do not match the replica.',timeline:'8:22–8:31 PM — Felix is continuously visible on ballroom rehearsal video.'},
-  mayaLie:{title:'Maya’s false statement',desc:'Maya first says, “I never touched the case or the display pin.” But a tethered test frame automatically copied to the house server at 8:24:31 shows her gloved hand holding the removable velvet display pin. The genuine diamond’s feather inclusion is still visible in that frame.',timeline:'8:24:31 PM — A server-copied test frame shows the genuine diamond and Maya handling the removable display pin, contradicting her later statement.'}
+  display:{title:'Display lock & substitute',desc:'The brass lock and hinges are undamaged. The stone in the case is an 18.04 ct blue cubic zirconia measuring 18.28 × 13.46 × 8.22 mm.',timeline:'9:12 PM — The display is opened under supervision. The stone is confirmed as a cubic zirconia substitute.'},
+  residue:{title:'Fluorescent residue',desc:'Under UV light, a tiny green fluorescent speck is visible on the underside of the substitute stone. Its spectrum matches the numbered tamper lacquer used in Evelyn’s appraisal kit. One lacquer dot is missing from that kit.',timeline:null},
+  camera:{title:'Hallway security footage',desc:'Continuous hallway footage begins at 8:45 PM. From 8:45 to 9:06, nobody enters or leaves the study. The recording has no missing segment or clock jump.',timeline:'8:45 PM — Hallway camera watch begins. No entry or exit occurs before the 9:06 discovery.'},
+  desk:{title:'8:18 appraisal record',desc:'Evelyn’s gem tester logged the genuine Blue Meridian at 8:18:42 PM. The record includes laser inscription BM-1847 and its characteristic feather inclusion.',timeline:'8:18:42 PM — The genuine Blue Meridian is electronically verified.'},
+  door:{title:'Door & window inspection',desc:'The study door has no tool marks. The single window is latched from inside and its old paint seal is unbroken. There is no usable second entrance.',timeline:null},
+  tripod:{title:'Tripod collar trace',desc:'A blue velvet fibre and a speck of clear display wax are trapped in Maya’s tripod collar. Both match the removable velvet display pin used for the close-up photographs.',timeline:null},
+  frame:{title:'8:24:31 tethered test frame',desc:'A test frame copied automatically to the house server at 8:24:31 shows the genuine feather inclusion. A blue-gloved hand is at the display pin. At the glove cuff, part of a silver bracelet and triangular clasp is visible.',timeline:'8:24:31 PM — A server-copied test frame still shows the genuine Blue Meridian.'},
+  raw:{title:'8:27:11 RAW photograph',desc:'Maya’s camera stores an unedited RAW frame timestamped 8:27:11. The feather inclusion is absent and the pavilion facets match the CZ substitute later removed from the case.',timeline:'8:27:11 PM — Maya’s RAW photograph already shows the substitute stone.'},
+  call:{title:'Call & door timestamps',desc:'Evelyn’s insurer call connects at 8:24:36. The study door contact does not open until 8:25:06; her phone transfers to the hallway access point at 8:25:09. The call continues until 8:28:10.',timeline:'8:24:36–8:25:09 PM — Evelyn answers the call before leaving the study; the door opens 30 seconds after connection.'},
+  order:{title:'Maya’s rush prop order',desc:'Four days before the dinner, Maya ordered an 18.1 ct blue CZ for a commercial shoot. The order dimensions are 17.70 × 13.00 × 8.10 mm.',timeline:'Four days earlier — Maya places a rush order for a blue CZ photography prop.'},
+  propstone:{title:'Sealed photography prop',desc:'The blue CZ from Maya’s rush order is found in its labelled supplier pouch inside her lighting case. Its dimensions match the order and do not match the substitute recovered from the display.',timeline:null},
+  adrian:{title:'Adrian’s cellar recording',desc:'An interior cellar camera shows Adrian continuously from 8:23:18 to 8:29:02. At 8:25:44 he removes a rare bottle that is later found in his car.',timeline:'8:23:18–8:29:02 PM — Adrian is continuously recorded in the cellar.'},
+  felix:{title:'Felix rehearsal video',desc:'A continuous ballroom recording shows Felix rehearsing from 8:22:03 to 8:31:49. His imitation gems are oversized red acrylic stage props.',timeline:'8:22:03–8:31:49 PM — Felix is continuously visible on ballroom rehearsal video.'},
+  bracelet:{title:'Evelyn’s silver bracelet',desc:'Evelyn is wearing a narrow silver bracelet with a triangular clasp. Dinner photographs from 7:40 onward show the same bracelet continuously on her right wrist.',timeline:null},
+  insurer:{title:'Insurer-file audit',desc:'The substitute matches the confidential insurer dimensions to within 0.02 mm. The public exhibition sheet uses rounded dimensions. The insurer audit log shows Evelyn downloaded the full measurement file eleven days ago; no other suspect account accessed it.',timeline:'Eleven days earlier — Evelyn downloads the confidential insurer measurement file.'},
+  ledger:{title:'Notation in Evelyn’s folio',desc:'A page in Evelyn’s private appraisal folio reads: “V.A. — 40 received / 200 on delivery / BM-1847.” A bank alert on the same date shows an incoming 40,000 payment from V. Armitage Holdings.',timeline:'Nine days earlier — Evelyn receives 40,000 from V. Armitage Holdings.'}
 };
+
 const suspects = [
   {name:'Maya Ortiz',icon:'📷',art:'../assets/maya.svg',role:'Event photographer',bio:'Freelance photographer hired to produce publicity images of the Blue Meridian. Her studio is under serious financial pressure.',questions:[
-    ['Where were you from 8:20 to 8:30?','In the study with Evelyn, mostly. I was setting up a macro shot. She handled the jewelry; I never touched the case or the display pin.'],
-    ['Why was your tripod next to the display?','Macro work. I had the center column lowered and the legs tight to the desk. Nothing unusual.'],
-    ['Did you order a blue replica stone?','What? No. I buy props sometimes for commercial shoots, but nothing connected to this dinner.']
+    ['What happened during the close-up setup?','Evelyn opened the case and handled the stone. I worked the camera. I did not take the diamond.'],
+    ['Did you touch the display equipment?','I adjusted the velvet pin once because the stone was leaning. I should have asked first. I panicked when everyone started looking at me.'],
+    ['Did you order a blue replica stone?','Yes. A blue CZ prop for a cosmetics campaign next week. It should still be sealed in my lighting case.'],
+    ['When did you notice Evelyn leave?','Her phone rang while she was still beside the display. I heard her answer. A short while later the study door opened and she went into the hall.']
   ]},
   {name:'Adrian Cole',icon:'🥃',art:'../assets/adrian.svg',role:'Host’s nephew',bio:'Recently cut off from a family trust and known to have gambling debts. He knows Ashcroft House well.',questions:[
-    ['Where were you at 8:25?','In the conservatory. Alone. I needed some air.'],
-    ['You know the house. Is there another way into the study?','No. The old service passage was bricked up decades ago. The window sticks and hasn’t opened in years.'],
-    ['Why are you nervous?','Because everyone has already decided the broke nephew did it. That is not evidence.']
+    ['Where were you at 8:25?','I said conservatory. Fine—check the cellar instead. I had my own reason not to want anyone looking there.'],
+    ['Is there another way into the study?','No. The old service passage was bricked up decades ago. The window barely moves.'],
+    ['Why lie about the cellar?','Because taking Uncle’s wine is embarrassing enough without being accused of stealing a diamond too.']
   ]},
   {name:'Evelyn Shaw',icon:'💎',art:'../assets/evelyn.svg',role:'Gem appraiser',bio:'Certified appraiser who verified the Blue Meridian for the insurer. She had authorized access to the stone before dinner.',questions:[
-    ['When did you last verify the real diamond?','8:18 PM. My tester printed the inscription and internal-feature scan automatically.'],
-    ['What happened during the photo setup?','I opened the case for Maya. At 8:24 the insurer called, so I stepped into the hall. Maya was still arranging the close-up, and the case was open for the shot. I returned a little after 8:28.'],
-    ['How did you know the displayed stone was fake at 9:06?','The inclusion was wrong. The Blue Meridian has a tiny feather under the upper-left crown facet. I could not see it through the glass.']
+    ['When did you verify the real diamond?','8:18 PM. My tester logged the inscription and internal features automatically.'],
+    ['What happened when the insurer called?','My phone rang during the photo setup. I answered and stepped into the hall. Maya remained with the open display.'],
+    ['Did you ever handle the substitute stone?','No. I handled the Blue Meridian during the appraisal and photo setup. I never handled a replica.'],
+    ['Do you always wear that bracelet?','This one? Yes. It belonged to my mother. I wore it all evening.'],
+    ['Who had the exact stone measurements?','The insurer, the owner and me. The public exhibition sheet gives rounded dimensions.']
   ]},
   {name:'Felix Rowan',icon:'🎩',art:'../assets/felix.svg',role:'Stage magician',bio:'Dinner entertainment. Carries gimmicks, duplicate objects, thread, magnets and imitation jewels as part of his act.',questions:[
-    ['Could you switch a diamond without anyone noticing?','On a stage? Maybe. In a locked display under scrutiny? Not with magic. Tricks still need opportunity.'],
+    ['Could you switch a diamond without anyone noticing?','On a stage, perhaps. But a trick is still mechanics and timing.'],
     ['Where were you at 8:25?','Ballroom rehearsal. The house videographer recorded the whole run.'],
-    ['Why do you have fake gems?','Because I make objects vanish for a living. They are red acrylic, oversized, and about as convincing as candy.']
+    ['Why do you carry fake gems?','They are stage props—red acrylic, deliberately oversized so the audience can see them.']
   ]}
 ];
+
 const state = {found:new Set(), notes:[], asked:{}, hints:0, selected:{}, deductionsChecked:false, deductionScore:0};
 const totalEvidence = Object.keys(evidence).length;
 document.getElementById('totalCount').textContent=totalEvidence;
 
-function save(){localStorage.setItem('case001_state',JSON.stringify({found:[...state.found],notes:state.notes,asked:state.asked,hints:state.hints,selected:state.selected,deductionsChecked:state.deductionsChecked,deductionScore:state.deductionScore}));}
-function load(){try{const s=JSON.parse(localStorage.getItem('case001_state'));if(!s)return;state.found=new Set(s.found||[]);state.notes=s.notes||[];state.asked=s.asked||{};state.hints=s.hints||0;state.selected=s.selected||{};state.deductionsChecked=!!s.deductionsChecked;state.deductionScore=s.deductionScore||0;}catch(e){}}
+function save(){localStorage.setItem('case001_v2_state',JSON.stringify({found:[...state.found],notes:state.notes,asked:state.asked,hints:state.hints,selected:state.selected,deductionsChecked:state.deductionsChecked,deductionScore:state.deductionScore}));}
+function load(){try{const s=JSON.parse(localStorage.getItem('case001_v2_state'));if(!s)return;state.found=new Set((s.found||[]).filter(id=>evidence[id]));state.notes=s.notes||[];state.asked=s.asked||{};state.hints=s.hints||0;state.selected=s.selected||{};state.deductionsChecked=!!s.deductionsChecked;state.deductionScore=s.deductionScore||0;}catch(e){}}
 function go(v){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));document.getElementById('view-'+v).classList.add('active');document.querySelectorAll('#nav [data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));}
 window.go=go;
 document.querySelectorAll('#nav [data-view]').forEach(b=>b.onclick=()=>go(b.dataset.view));
 function addEvidence(id, extraNote){if(!state.found.has(id)){state.found.add(id);state.notes.unshift(`<b>${evidence[id].title}</b> — ${extraNote||evidence[id].desc}`);save();renderAll();}}
 function openModal(html){document.getElementById('modalContent').innerHTML=html;document.getElementById('modal').classList.add('show')}
 function closeModal(){document.getElementById('modal').classList.remove('show')} window.closeModal=closeModal;
+
 function inspect(id){
-  if(id==='display'){addEvidence('display','Lock is clean; the stone in the case is a CZ replica.');openModal('<h2>Display case</h2><p>The lock and hinges are pristine. No pick scratches, pry marks, or damage. Under supervision, the case is opened and the displayed stone tests as a blue cubic zirconia.</p><p><b>Inference:</b> either someone used the proper key, or the real stone was switched while the case was legitimately open.</p>')}
-  if(id==='camera'){addEvidence('camera','Nobody enters the study after 8:45 PM.');openModal('<h2>Hallway camera</h2><p>The recording is continuous from 8:45 PM. You verify the checksum and time overlay: no missing segment, no restart, no clock jump. Nobody enters or leaves the study before the discovery at 9:06.</p><p><b>Important:</b> this proves only that nobody entered after 8:45 — not that the real diamond was still present at 8:45.</p>')}
-  if(id==='desk'){addEvidence('desk','The genuine Blue Meridian was electronically verified at 8:18:42 PM; its unique feather inclusion can be used to authenticate later images.');openModal('<h2>Appraisal printout</h2><p>Evelyn’s device printed an automated record at <b>8:18:42 PM</b>. It captures inscription <b>BM-1847</b> and the natural feather inclusion shown in the insurer’s reference image.</p><p>This establishes the diamond’s unique identifying inclusion. A later server-copied image can therefore prove whether the genuine stone was still present.</p>')}
-  if(id==='door'){addEvidence('door','No viable hidden route into the room.');openModal('<h2>Door and window</h2><p>No tool marks on the door. The window latch is inside, and the brittle paint seal along the sash is intact. There is no usable second entrance.</p>')}
-  if(id==='tripod'){addEvidence('tripod','Blue velvet fibre and display wax are trapped in the photographer’s tripod collar.');openModal('<h2>Tripod floor mark</h2><p>A fresh tripod footprint sits beside the display. In the threaded collar left near the desk, you find a <b>blue velvet fibre</b> and a speck of <b>clear mounting wax</b>.</p><p>Both match the removable pin that held the Blue Meridian.</p>')}
+  if(id==='display'){
+    addEvidence('display');
+    addEvidence('residue');
+    openModal('<h2>Display case</h2><p>The lock and hinges are undamaged. The displayed stone tests as cubic zirconia and measures <b>18.28 × 13.46 × 8.22 mm</b>.</p><p>Under UV light, a tiny green fluorescent speck is visible on the underside of the stone.</p>');
+  }
+  if(id==='camera'){
+    addEvidence('camera');
+    openModal('<h2>Hallway camera</h2><p>The recording begins at <b>8:45 PM</b> and runs continuously. Nobody enters or leaves the study before the discovery at 9:06.</p>');
+  }
+  if(id==='desk'){
+    addEvidence('desk');
+    addEvidence('insurer');
+    addEvidence('ledger');
+    openModal('<h2>Appraisal papers</h2><p>The 8:18:42 appraisal log records inscription <b>BM-1847</b> and the stone’s feather inclusion.</p><p>The insurer-file audit and Evelyn’s private appraisal folio are filed with the paperwork.</p>');
+  }
+  if(id==='door'){
+    addEvidence('door');
+    openModal('<h2>Door and window</h2><p>No tool marks on the door. The window is latched from inside and its brittle paint seal is intact.</p>');
+  }
+  if(id==='tripod'){
+    addEvidence('tripod');
+    openModal('<h2>Tripod</h2><p>A blue velvet fibre and a speck of clear display wax are caught in the tripod collar.</p>');
+  }
 }
 window.inspect=inspect;
 
 function renderSuspects(){const g=document.getElementById('suspectGrid');g.innerHTML='';suspects.forEach((s,si)=>{const d=document.createElement('div');d.className='suspect';d.innerHTML=`<div class="portrait"><img src="${s.art}" alt="Portrait of ${s.name}"></div><h3>${s.name}</h3><div class="role">${s.role}</div><p>${s.bio}</p><div class="qa"></div><div class="statement" id="st-${si}">Select a question.</div>`;const qa=d.querySelector('.qa');s.questions.forEach((q,qi)=>{const b=document.createElement('button');b.className='btn';b.textContent=q[0];b.onclick=()=>ask(si,qi);qa.appendChild(b)});g.appendChild(d)})}
-function ask(si,qi){const s=suspects[si], ans=s.questions[qi][1];document.getElementById('st-'+si).innerHTML=`<b>${s.name}:</b> “${ans}”`;state.asked[`${si}-${qi}`]=true;
+function ask(si,qi){
+  const s=suspects[si], ans=s.questions[qi][1];
+  document.getElementById('st-'+si).innerHTML=`<b>${s.name}:</b> “${ans}”`;
+  state.asked[`${si}-${qi}`]=true;
+
+  if(si===0&&qi===0) addEvidence('frame');
+  if(si===0&&qi===1) addEvidence('tripod');
+  if(si===0&&qi===2){addEvidence('order');addEvidence('propstone');}
+  if(si===0&&qi===3) addEvidence('call');
+  if(si===1&&qi===0) addEvidence('adrian');
   if(si===2&&qi===0) addEvidence('desk');
-  if(si===2&&qi===1) addEvidence('call','Evelyn’s insurer call places her in the hall while Maya remains inside.');
-  if(si===2&&qi===2 && state.found.has('raw')) state.notes.unshift('<b>Cross-check:</b> Evelyn’s description of the feather inclusion matches the 8:18 scan and is absent in the 8:27 RAW frame.');
-  if(si===1&&qi===0) addEvidence('adrian','Adrian’s lie concerns a stolen wine bottle, not the diamond.');
-  if(si===3&&qi===1) addEvidence('felix','Continuous rehearsal video removes Felix from the key swap window.');
-  if(si===0&&qi===0){addEvidence('mayaLie','Maya denies handling the display pin, but the 8:24:31 server-copied test frame contradicts her and still shows the genuine stone.'); if(state.found.has('raw')) state.notes.unshift('<b>Pressure point:</b> Maya lied about handling the pin before the replica appears in her later RAW photo.');}
-  if(si===0&&qi===2){addEvidence('order','Maya ordered a custom blue CZ four days before the dinner.');addEvidence('message','A collector offered Maya cash only for the authentic Blue Meridian.');}
-  save();renderAll();}
+  if(si===2&&qi===1) addEvidence('call');
+  if(si===2&&qi===2) addEvidence('residue');
+  if(si===2&&qi===3) addEvidence('bracelet');
+  if(si===2&&qi===4) addEvidence('insurer');
+  if(si===3&&qi===1) addEvidence('felix');
+
+  save();renderAll();
+}
