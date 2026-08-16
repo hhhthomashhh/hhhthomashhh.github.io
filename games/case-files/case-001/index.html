@@ -20,7 +20,7 @@
       <button data-view="suspects">🗣️ Suspects</button>
       <button data-view="evidence">🧾 Evidence</button>
       <button data-view="timeline">🕒 Timeline</button>
-      <button data-view="deduction">🧠 Deduction</button>
+      <button data-view="deduction">🧠 Case Theory</button>
       <div class="sep"></div>
       <button id="accuseBtn" class="gold">⚖️ Make Accusation</button>
       <button id="resetBtn">↻ Reset Case</button>
@@ -30,21 +30,21 @@
       <section class="hero">
         <div class="kicker">CASE 001</div>
         <h2>The Missing Diamond</h2>
-        <p>At a private dinner in Ashcroft House, the 18-carat Blue Meridian diamond is discovered missing from its locked glass display. The hallway camera shows no one entering the study after 8:45 PM. Four guests had motive. The obvious suspect may not be the right one.</p>
+        <p>At a private dinner in Ashcroft House, the 18-carat Blue Meridian diamond is discovered missing from its locked glass display. The hallway camera shows no one entering the study after 8:45 PM. Four guests draw suspicion for very different reasons.</p>
       </section>
       <div class="content">
         <section class="view active" id="view-briefing">
           <img class="case-cover" src="../assets/cover.svg" alt="Case Files 001 — The Missing Diamond illustrated cover">
           <div class="cardgrid">
-            <div class="card"><h3>What happened</h3><p>At 9:06 PM, gem appraiser Evelyn Shaw looks through the display glass and immediately says the stone is not the Blue Meridian. A later inspection confirms the stone in the case is a near-perfect cubic zirconia replica.</p><p><strong>Your job:</strong> identify who stole the real diamond, when the switch happened, and how.</p></div>
-            <div class="card"><h3>The apparent impossibility</h3><p>The study was placed under continuous hallway-camera watch at 8:45 PM. From then until the discovery, nobody entered or left the room. The display lock shows no forced entry.</p><p>Do not assume the crime happened when it was discovered.</p></div>
-            <div class="card"><h3>Rules of the case</h3><p>Every fact needed to solve the case can be found in the game. Red herrings may explain suspicious behavior, but the final answer does not depend on guessing personality or motive.</p></div>
-            <div class="card"><h3>Detective standard</h3><p>A strong solution should distinguish <b>suspicion</b> from <b>proof</b>: establish the timeline, test each statement, compare the physical traces, and account for how the substitute was prepared.</p><button class="btn gold" onclick="go('scene')">Begin investigation →</button></div>
+            <div class="card"><h3>What happened</h3><p>At 9:06 PM, gem appraiser Evelyn Shaw looks through the display glass and says the stone is not the Blue Meridian. A later inspection confirms the stone in the case is a cubic zirconia substitute.</p><p><strong>Your job:</strong> identify who stole the real diamond, when the switch happened, and how.</p></div>
+            <div class="card"><h3>The apparent impossibility</h3><p>The study was placed under continuous hallway-camera watch at 8:45 PM. From then until the discovery, nobody entered or left the room. The display lock shows no forced entry.</p></div>
+            <div class="card"><h3>Rules of the case</h3><p>Every fact needed to solve the case can be found in the game. People may lie for reasons unrelated to the diamond, and suspicious evidence may have an innocent explanation.</p></div>
+            <div class="card"><h3>Detective standard</h3><p>Collect the facts, compare the suspects, and decide which evidence matters. The game will not tell you whether your theory is correct until you make an accusation.</p><button class="btn gold" onclick="go('scene')">Begin investigation →</button></div>
           </div>
         </section>
 
         <section class="view" id="view-scene">
-          <h3>The Study</h3><p class="note">Inspect the marked areas. Some clues only become useful after you speak to the right person.</p>
+          <h3>The Study</h3><p class="note">Inspect the marked areas. Some evidence becomes available through interviews.</p>
           <div class="scene">
             <div class="room-label">ASHCROFT HOUSE — STUDY — 9:18 PM</div>
             <button class="hotspot hs-case" onclick="inspect('display')">Display case</button>
@@ -60,7 +60,7 @@
         </section>
 
         <section class="view" id="view-evidence">
-          <h3>Evidence Locker</h3><p class="note">Collected evidence is preserved exactly as found. The case can be solved without every optional clue.</p>
+          <h3>Evidence Locker</h3><p class="note">Evidence is recorded as found. Its significance is for you to decide.</p>
           <div class="evidence-list" id="evidenceList"></div>
         </section>
 
@@ -69,10 +69,8 @@
         </section>
 
         <section class="view" id="view-deduction">
-          <h3>Deduction Board</h3><p class="note">Lock in the five logical steps. You can change an answer until you press “Check deductions.”</p>
+          <h3>Case Theory</h3><p class="note">Pin the evidence you believe best supports your accusation. Nothing here is graded before you submit your final theory.</p>
           <div class="deduce" id="deductionBoard"></div>
-          <div style="margin-top:14px"><button class="btn gold" id="checkDeduction">Check deductions</button></div>
-          <div id="deductionFeedback"></div>
         </section>
       </div>
     </main>
@@ -80,7 +78,7 @@
     <aside class="panel right">
       <h3>CASE PROGRESS</h3><div class="counter"><span id="foundCount">0</span>/<span id="totalCount">12</span></div><div class="tiny">evidence items found</div><div class="progress"><div class="bar" id="progressBar"></div></div>
       <div class="sep" style="height:1px;background:var(--line);margin:16px 0"></div>
-      <h3>DETECTIVE NOTEBOOK</h3><div class="notebook" id="notebook"><div class="noteitem">Start by establishing when the real diamond was last definitely genuine.</div></div>
+      <h3>DETECTIVE NOTEBOOK</h3><div class="notebook" id="notebook"><div class="noteitem">Collect facts first. Decide what they mean only after comparing the suspects.</div></div>
       <div class="sep" style="height:1px;background:var(--line);margin:16px 0"></div>
       <button class="btn" id="hintBtn" style="width:100%">Request a hint</button><div class="tiny" style="margin-top:7px">Hints reduce your final score.</div>
     </aside>
@@ -88,12 +86,12 @@
 </div>
 
 <div class="modal" id="modal"><div class="modal-card"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
-<div class="modal" id="accuseModal"><div class="modal-card"><button class="close" onclick="closeAccuse()">×</button><h2>Final Accusation</h2><p class="note">A correct accusation must identify the thief, the method, and the motive. The game will also check whether your deduction board shows the correct crime window.</p>
+<div class="modal" id="accuseModal"><div class="modal-card"><button class="close" onclick="closeAccuse()">×</button><h2>Final Accusation</h2><p class="note">Choose your culprit, method, motive and crime window. Your pinned Case Theory evidence must also support the accusation.</p>
   <div class="accuse-grid">
     <div class="field"><label>Who stole the Blue Meridian?</label><select id="culpritSelect"><option value="">Choose suspect…</option><option>Maya Ortiz</option><option>Adrian Cole</option><option>Evelyn Shaw</option><option>Felix Rowan</option></select></div>
-    <div class="field"><label>How was it taken?</label><select id="methodSelect"><option value="">Choose method…</option><option value="swap">Swapped for a prepared replica while the case was legitimately open</option><option value="pick">Picked the display lock after 8:45</option><option value="window">Entered through the window</option><option value="camera">Disabled the hallway camera and entered unseen</option></select></div>
+    <div class="field"><label>How was it taken?</label><select id="methodSelect"><option value="">Choose method…</option><option value="swap">Swapped for a prepared substitute while the display was open</option><option value="pick">Picked the display lock</option><option value="window">Entered through the window</option><option value="camera">Disabled the hallway camera and entered unseen</option></select></div>
     <div class="field"><label>Why?</label><select id="motiveSelect"><option value="">Choose motive…</option><option value="buyer">To deliver the real stone to a private buyer for payment</option><option value="inheritance">To force an inheritance dispute</option><option value="revenge">To damage the owner’s reputation</option><option value="performance">To create publicity for a magic act</option></select></div>
-    <div class="field"><label>When did the thief make the switch?</label><select id="windowSelect"><option value="">Choose window…</option><option value="820-823">8:20–8:23 PM</option><option value="82431-82506">After the 8:24:31 frame and before the study door opened at 8:25:06</option><option value="82506-82711">After 8:25:06 and before the 8:27:11 RAW frame</option><option value="845-906">8:45–9:06 PM</option></select></div>
+    <div class="field"><label>When did the switch happen?</label><select id="windowSelect"><option value="">Choose window…</option><option value="820-823">8:20–8:23 PM</option><option value="824-827">8:24–8:27 PM</option><option value="827-845">8:27–8:45 PM</option><option value="845-906">8:45–9:06 PM</option></select></div>
   </div>
   <div style="margin-top:15px"><button class="btn gold" id="submitAccusation">Submit accusation</button></div><div id="accuseResult"></div>
 </div></div>
