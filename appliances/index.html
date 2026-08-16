@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Thomas's home appliance and equipment library — manuals, maintenance schedules, parts and useful notes." />
+  <title>Home Appliance Library · Thomas's Playground</title>
+  <style>
+    :root{--bg:#0b1020;--panel:#121a2f;--panel2:#18233d;--text:#eef4ff;--muted:#9fb0cd;--accent:#67e8f9;--accent2:#a78bfa;--green:#86efac;--amber:#fde68a;--border:rgba(255,255,255,.09);--shadow:0 18px 50px rgba(0,0,0,.28)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 15% 10%,rgba(103,232,249,.12),transparent 30%),radial-gradient(circle at 85% 0%,rgba(167,139,250,.13),transparent 28%),var(--bg);min-height:100vh}a{color:inherit}.wrap{width:min(1180px,calc(100% - 32px));margin:0 auto}header{display:flex;justify-content:space-between;align-items:center;padding:24px 0}.brand{font-weight:800;text-decoration:none}.back{color:var(--muted);text-decoration:none}.back:hover{color:#fff}.hero{padding:58px 0 34px;max-width:850px}.eyebrow{color:var(--accent);font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.14em}h1{font-size:clamp(40px,7vw,68px);line-height:1;margin:14px 0 18px;letter-spacing:-.04em}.hero p{color:var(--muted);font-size:18px;line-height:1.7}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:18px 0 42px}.stat{padding:20px;border:1px solid var(--border);border-radius:18px;background:rgba(18,26,47,.76)}.stat strong{display:block;font-size:28px}.stat span{color:var(--muted);font-size:13px}.section-title{font-size:25px;margin:44px 0 16px}.empty{padding:30px;border:1px dashed rgba(103,232,249,.28);border-radius:22px;background:rgba(18,26,47,.62)}.empty h3{margin:0 0 8px;font-size:22px}.empty p{margin:0;color:var(--muted);line-height:1.65}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{padding:24px;background:linear-gradient(145deg,rgba(24,35,61,.95),rgba(18,26,47,.92));border:1px solid var(--border);border-radius:22px;box-shadow:var(--shadow)}.card h3{margin:8px 0 12px;font-size:22px}.meta{display:grid;grid-template-columns:130px 1fr;gap:8px 14px;color:var(--muted);font-size:14px;line-height:1.5}.meta b{color:#dce8fb}.pill{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:6px 9px;border-radius:999px;background:rgba(103,232,249,.12);color:#c8f7ff}.maintenance{margin-top:18px;padding-top:16px;border-top:1px solid var(--border)}.maintenance h4{margin:0 0 10px}.maintenance ul{margin:0;padding-left:20px;color:var(--muted);line-height:1.65}.manual{display:inline-block;margin-top:16px;color:var(--accent);font-weight:800;text-decoration:none}.guide{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.guide div{padding:20px;border-radius:18px;border:1px solid var(--border);background:rgba(18,26,47,.72)}.guide strong{display:block;margin-bottom:7px}.guide span{color:var(--muted);font-size:14px;line-height:1.55}footer{border-top:1px solid var(--border);color:var(--muted);padding:28px 0 40px;font-size:14px;margin-top:60px}@media(max-width:760px){.summary,.guide,.grid{grid-template-columns:1fr}.hero{padding-top:42px}.meta{grid-template-columns:105px 1fr}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header><a class="brand" href="../">Thomas's Playground</a><a class="back" href="../">← Back to home</a></header>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Home reference library</div>
+        <h1>Home Appliance & Equipment Library</h1>
+        <p>A practical record of the appliances and equipment in my home — exact model numbers, official manuals, maintenance schedules, consumable parts, troubleshooting notes and useful operating information.</p>
+      </section>
+
+      <section class="summary">
+        <div class="stat"><strong>0</strong><span>Items catalogued</span></div>
+        <div class="stat"><strong>0</strong><span>Official manuals linked</span></div>
+        <div class="stat"><strong>0</strong><span>Maintenance tasks tracked</span></div>
+      </section>
+
+      <section>
+        <h2 class="section-title">Appliances & equipment</h2>
+        <div class="empty">
+          <h3>Library ready for the first appliance</h3>
+          <p>Items will appear here as they are added. Each entry will prioritize the manufacturer's official manual and support information, along with the maintenance details that are actually useful at home.</p>
+        </div>
+        <div class="grid" id="appliance-grid" style="margin-top:18px"></div>
+      </section>
+
+      <section>
+        <h2 class="section-title">What each entry will include</h2>
+        <div class="guide">
+          <div><strong>📘 Manuals & model details</strong><span>Brand, exact model, serial number when useful, official user/installation manuals and manufacturer support.</span></div>
+          <div><strong>🧰 Maintenance</strong><span>Cleaning intervals, filter changes, inspections and other recurring jobs, with clear recommended frequency.</span></div>
+          <div><strong>🔧 Parts & troubleshooting</strong><span>Filter and consumable part numbers, common problems, useful reset procedures and important operating notes.</span></div>
+        </div>
+      </section>
+    </main>
+    <footer>Personal home reference · Part of Thomas's Playground</footer>
+  </div>
+</body>
+</html>
