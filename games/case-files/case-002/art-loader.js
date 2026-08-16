@@ -1,5 +1,5 @@
 (() => {
-  const version = '5';
+  const version = '6';
   const chunkUrls = Array.from({length:7}, (_,i) => `assets/art-v3/chunk${String(i).padStart(2,'0')}.txt?v=${version}`);
   let artUrl = '';
 
@@ -15,7 +15,7 @@
     const positions = ['0% 100%','33.333333% 100%','66.666667% 100%','100% 100%'];
     document.querySelectorAll('#suspectGrid .portrait').forEach((el, i) => {
       if (i > 3) return;
-      el.textContent = '';
+      if (el.textContent) el.textContent = '';
       el.style.setProperty('background-image', `url("${artUrl}")`, 'important');
       el.style.setProperty('background-size', '400% 280%', 'important');
       el.style.setProperty('background-position', positions[i], 'important');
@@ -32,7 +32,7 @@
     img.onload = () => {
       applyArtwork();
       const grid = document.getElementById('suspectGrid');
-      if (grid) new MutationObserver(applyArtwork).observe(grid, {childList:true, subtree:true});
+      if (grid) new MutationObserver(applyArtwork).observe(grid, {childList:true});
     };
     img.src = artUrl;
   }).catch(err => console.error('Case 002 artwork loader:', err));
