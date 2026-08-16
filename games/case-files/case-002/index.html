@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CASE FILES 002 — The Vanished Painting</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="brand"><div class="badge">CF</div><div><h1>CASE FILES</h1><small>Interactive Mini Detective Series</small></div></div>
+    <div class="status"><div class="pill">Case <strong>002</strong></div><div class="pill">Difficulty <strong>★★★★☆</strong></div><div class="pill">Rank <strong id="rankTop">Rookie</strong></div></div>
+  </div>
+
+  <div class="layout">
+    <aside class="panel nav" id="nav">
+      <button data-view="briefing" class="active">📁 Briefing</button>
+      <button data-view="scene">🖼️ Gallery</button>
+      <button data-view="suspects">🗣️ Suspects</button>
+      <button data-view="evidence">🧾 Evidence</button>
+      <button data-view="timeline">🕒 Timeline</button>
+      <button data-view="theory">📌 Case Theory</button>
+      <div class="sep"></div>
+      <button id="accuseBtn" class="gold">⚖️ Make Accusation</button>
+      <button id="resetBtn">↻ Reset Case</button>
+    </aside>
+
+    <main class="panel main">
+      <section class="hero">
+        <div class="kicker">CASE 002</div>
+        <h2>The Vanished Painting</h2>
+        <p>At a private gallery preview, the insured masterpiece <i>Harbour at Dusk</i> disappears during an 86-second blackout. The gallery was sealed, the frame alarm never sounded, and four people had reasons to want the painting gone.</p>
+      </section>
+      <div class="content">
+        <section class="view active" id="view-briefing">
+          <div class="case-cover">
+            <div class="cover-file">CASE 002</div>
+            <div class="cover-title">THE VANISHED<br>PAINTING</div>
+            <div class="cover-sub">The lights went out. The painting was gone.<br>The theft may have happened much earlier.</div>
+            <div class="cover-frame"><div class="cover-art"></div></div>
+          </div>
+          <div class="cardgrid">
+            <div class="card"><h3>What happened</h3><p>At 9:01 PM the gallery loses power for 86 seconds. When emergency lighting stabilizes, <i>Harbour at Dusk</i> is missing from its frame. Guests are held inside while security seals the building.</p></div>
+            <div class="card"><h3>The puzzle</h3><p>No alarm sounded. No one is recorded leaving with a large canvas. The gallery owner insists the painting was on the wall immediately before the blackout.</p></div>
+            <div class="card"><h3>Your job</h3><p>Determine who stole the real painting, when it actually left secure custody, how the disappearance was staged, and why.</p></div>
+            <div class="card"><h3>Detective standard</h3><p>Do not assume the most dramatic event is the crime. Compare photographs, logs, physical traces and each suspect’s reason for lying.</p><button class="btn gold" onclick="go('scene')">Begin investigation →</button></div>
+          </div>
+        </section>
+
+        <section class="view" id="view-scene">
+          <h3>Langford Gallery — Gallery 3</h3><p class="note">Inspect the marked areas. Some records become available only after the relevant interview.</p>
+          <div class="scene">
+            <div class="room-label">GALLERY 3 — 9:14 PM</div>
+            <div class="wall-art a1"></div><div class="wall-art a2"></div><div class="empty-frame"></div>
+            <div class="bench"></div><div class="plinth"></div><div class="door-shape"></div>
+            <button class="hotspot hs-frame" onclick="inspect('frame')">Empty frame</button>
+            <button class="hotspot hs-alarm" onclick="inspect('alarm')">Alarm panel</button>
+            <button class="hotspot hs-plinth" onclick="inspect('plinth')">Promo plinth</button>
+            <button class="hotspot hs-desk" onclick="inspect('desk')">Condition folder</button>
+            <button class="hotspot hs-door" onclick="inspect('door')">Loading route</button>
+          </div>
+        </section>
+
+        <section class="view" id="view-suspects"><div class="suspects" id="suspectGrid"></div></section>
+        <section class="view" id="view-evidence"><h3>Evidence Locker</h3><p class="note">The descriptions record what was found, not what it means.</p><div class="evidence-list" id="evidenceList"></div></section>
+        <section class="view" id="view-timeline"><h3>Verified Timeline</h3><p class="note">Only evidence-backed events appear here.</p><div class="timeline" id="timelineList"></div></section>
+        <section class="view" id="view-theory"><h3>Case Theory</h3><p class="note">Pin up to five discovered evidence items that best support your theory. Nothing is graded here.</p><div class="theory-board" id="theoryBoard"></div><div class="theory-note" id="theoryNote"></div></section>
+      </div>
+    </main>
+
+    <aside class="panel right">
+      <h3>CASE PROGRESS</h3><div class="counter"><span id="foundCount">0</span>/<span id="totalCount">0</span></div><div class="tiny">evidence items found</div><div class="progress"><div class="bar" id="progressBar"></div></div>
+      <div class="sep"></div>
+      <h3>DETECTIVE NOTEBOOK</h3><div class="notebook" id="notebook"><div class="noteitem">Start with the frame and the last confirmed image of the genuine painting.</div></div>
+      <div class="sep"></div>
+      <button class="btn" id="hintBtn" style="width:100%">Request a hint</button><div class="tiny" style="margin-top:7px">Hints reduce your final score.</div>
+    </aside>
+  </div>
+</div>
+
+<div class="modal" id="modal"><div class="modal-card"><button class="close" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
+<div class="modal" id="accuseModal"><div class="modal-card"><button class="close" onclick="closeAccuse()">×</button><h2>Final Accusation</h2><p class="note">Commit to your theory. Your pinned evidence will be considered as part of the accusation.</p>
+  <div class="accuse-grid">
+    <div class="field"><label>Who stole the real painting?</label><select id="culpritSelect"><option value="">Choose suspect…</option><option>Victor Langford</option><option>Clara Bennett</option><option>Daniel Brooks</option><option>Ivy Chen</option></select></div>
+    <div class="field"><label>When did the real theft occur?</label><select id="windowSelect"><option value="">Choose…</option><option value="prepreview">Before the preview, between the condition check and the 8:06 loading-dock departure</option><option value="blackout">During the 9:01 blackout</option><option value="after">After the blackout but before security sealed the gallery</option><option value="late">After guests were released</option></select></div>
+    <div class="field"><label>How was the disappearance staged?</label><select id="methodSelect"><option value="">Choose…</option><option value="staged">The original was removed earlier, a facsimile was displayed, and the blackout was used to make the facsimile disappear</option><option value="cut">The genuine canvas was cut from the frame during the blackout</option><option value="alarm">The alarm was hacked and the real painting carried out through the main gallery</option><option value="service">The real painting was passed through a hidden service opening during the blackout</option></select></div>
+    <div class="field"><label>Why?</label><select id="motiveSelect"><option value="">Choose…</option><option value="double">To obtain cash from a private sale and then claim the increased insurance value</option><option value="provenance">To hide an embarrassing provenance error</option><option value="family">To reclaim a work believed stolen from the suspect’s family</option><option value="restoration">To conceal damage caused during restoration</option></select></div>
+  </div>
+  <div style="margin-top:15px"><button class="btn gold" id="submitAccusation">Submit accusation</button></div><div id="accuseResult"></div>
+</div></div>
+<script src="game.js"></script>
+</body></html>
