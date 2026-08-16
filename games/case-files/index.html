@@ -125,9 +125,9 @@ footer{border-top:1px solid rgba(255,255,255,.07);margin-top:54px;padding:26px 0
             <span class="chip">Difficulty ★★★☆☆</span>
             <span class="chip">10–20 min</span>
             <span class="chip">Theft</span>
-            <span class="chip">Timeline deduction</span>
+            <span class="chip">Evidence deduction</span>
           </div>
-          <div class="desc">The Blue Meridian disappears from a locked display at Ashcroft House. Four people have motive, but only one suspect fits the exact evidence window.</div>
+          <div class="desc">The Blue Meridian disappears from a locked display at Ashcroft House. The obvious clues point strongly toward one suspect, but the smallest details tell a different story.</div>
           <div class="case-footer">
             <span class="status" id="case001status">Unsolved</span>
             <a class="play" href="case-001/">PLAY CASE 001</a>
@@ -171,7 +171,7 @@ footer{border-top:1px solid rgba(255,255,255,.07);margin-top:54px;padding:26px 0
 </div>
 <script>
 try {
-  if (localStorage.getItem('case001_solved') === 'true') {
+  if (localStorage.getItem('case001_v2_solved') === 'true') {
     const el = document.getElementById('case001status');
     el.textContent = '✓ Solved';
     el.classList.add('solved');
