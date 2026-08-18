@@ -1,0 +1,76 @@
+ouse','🏭','WAREHOUSE MASTER','Earn three stars on every Warehouse level.']
+];
+function unlockAch(id){if(save.achievements[id])return;save.achievements[id]=true;writeSave();const a=achievements.find(x=>x[0]===id);if(a)showToast('🏆 '+a[2])}
+
+// ---------- Game state ----------
+const canvas=$('#canvas'),ctx=canvas.getContext('2d',{alpha:false});
+let currentLevelNum=1,isDaily=false,dailyKey='',world=null,aim={x:900,y:400},fired=false,bullet=null,secondary=[],particles=[],floating=[],simTime=0,lastTs=0,acc=0,paused=false,resultState=null,resolveTimer=0,shake=0,pointerActive=false,pointerStart=null,hintStage=0,stats=null,pending=[];
+let scaleX=1,scaleY=1;
+function blankStats(){return {ricochets:0,directKills:0,enemyKills:0,environmentKills:0,explosions:0,electric:0,glass:0,rope:0,switches:0,chain:0,maxChain:0,piano:false,movingRicochet:false,enemyKillCount:0,bossOrder:[],explosionKillMax:0,hints:0,score:0}}
+function buildWorld(lvl){const w=deepClone(lvl);for(const k of ['walls','barrels','ropes','hangings','switches','panels','puddles','movers','doors','hostages'])w[k]=w[k]||[];for(const e of w.enemies){e.alive=true;e.r=e.r||18;e.deadBy=null;e.reacted=false}for(const b of w.barrels){b.alive=true;b.r=b.r||20;b.vx=b.vx||0;b.vy=b.vy||0;b.blast=b.blast===undefined?125:b.blast}return w}
+function startLevel(n,{daily=false}={}){currentLevelNum=clamp(n,1,levels.length);isDaily=daily;dailyKey=daily?dateKey():'';world=buildWorld(levels[currentLevelNum-1]);fired=false;bullet=null;secondary=[];particles=[];floating=[];pending=[];simTime=0;resolveTimer=0;resultState=null;paused=false;hintStage=0;stats=blankStats();aim={x:world.player.x+700,y:world.player.y-120};$('#resultOverlay').classList.remove('show');$('#pauseOverlay').classList.remove('show');$('#fireBtn').disabled=false;$('#aimTip').style.display='block';$('#hudLevel').textContent=daily?'SHOT OF THE DAY':`LEVEL ${world.n} — ${world.name.toUpperCase()}`;$('#hudObjective').textContent=world.objective+(world.perfect?.text?`  ★★★ ${world.perfect.text}`:'');updateHud();showScreen('game');resizeCanvas();updateMusic();lastTs=performance.now();acc=0}
+function retry(){if(!world)return;startLevel(currentLevelNum,{daily:isDaily})}
+function dateKey(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function dailyLevel(){let h=2166136261;for(const c of dateKey()){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}return 1+(Math.abs(h)%levels.length)}
+
+function showScreen(id){$$('.screen').forEach(s=>s.classList.toggle('active',s.id===id));if(id!=='game'){paused=true;updateMusic()}if(id==='menu'||id==='levels'||id==='achievements'||id==='settings')refreshAllUI()}
+
+// ---------- Pointer / aiming ----------
+function eventToWorld(e){const r=canvas.getBoundingClientRect();return {x:(e.clientX-r.left)*W/r.width,y:(e.clientY-r.top)*H/r.height}}
+canvas.addEventListener('pointerdown',e=>{if(paused||resultState||fired)return;ensureAudio();pointerActive=true;pointerStart={x:e.clientX,y:e.clientY,type:e.pointerType};canvas.setPointerCapture?.(e.pointerId);const p=eventToWorld(e);aim=p;e.preventDefault()},{passive:false});
+canvas.addEventListener('pointermove',e=>{if(paused||resultState||fired)return;if(e.pointerType==='mouse'||pointerActive){aim=eventToWorld(e);e.preventDefault()}},{passive:false});
+canvas.addEventListener('pointerup',e=>{if(!pointerActive||paused||resultState||fired)return;pointerActive=false;aim=eventToWorld(e);e.preventDefault();fire()},{passive:false});
+canvas.addEventListener('contextmenu',e=>e.preventDefault());
+$('#fireBtn').addEventListener('click',e=>{e.stopPropagation();fire()});
+function fire(){if(fired||paused||resultState||!world)return;ensureAudio();const dx=aim.x-world.player.x,dy=aim.y-world.player.y,len=Math.hypot(dx,dy);if(len<20)return;fired=true;$('#fireBtn').disabled=true;$('#aimTip').style.display='none';const speed=920;bullet={x:world.player.x,y:world.player.y,vx:dx/len*speed,vy:dy/len*speed,r:4,energy:1,bounces:0,alive:true,life:0,glassHit:new Set(),hitCooldown:0};sfx('shot');spawnMuzzle(world.player.x,world.player.y,Math.atan2(dy,dx));recordEvent('shot',world.player.x,world.player.y,0);triggerReactions('shot');}
+
+// ---------- Physics / simulation ----------
+function circleRect(x,y,r,o){return x+r>o.x&&x-r<o.x+o.w&&y+r>o.y&&y-r<o.y+o.h}
+function pointSegDist(px,py,x1,y1,x2,y2){const vx=x2-x1,vy=y2-y1,wx=px-x1,wy=py-y1,c1=vx*wx+vy*wy;if(c1<=0)return Math.hypot(px-x1,py-y1);const c2=vx*vx+vy*vy;if(c2<=c1)return Math.hypot(px-x2,py-y2);const b=c1/c2;return Math.hypot(px-(x1+b*vx),py-(y1+b*vy))}
+function step(dt){if(paused||resultState||!world)return;simTime+=dt;
+  // movers
+  for(const m of world.movers){const old=m[m.axis],next=old+m.dir*m.speed*dt;if(next<m.min||next>m.max)m.dir*=-1;m[m.axis]+=m.dir*m.speed*dt}
+  // movable barrels
+  for(const b of world.barrels){if(!b.alive)continue;if(Math.abs(b.vx||0)>.01){b.x+=b.vx*dt;b.vx*=Math.pow(.7,dt);for(const e of world.enemies)if(e.alive&&Math.hypot(e.x-b.x,e.y-b.y)<e.r+b.r+5&&Math.abs(b.vx)>45){explodeBarrel(b,'impact');break}}}
+  // hanging fall
+  for(const h of world.hangings){if(!h.alive||!h.falling)continue;h.vy+=830*dt;h.y+=h.vy*dt;let hit=false;for(const e of world.enemies){if(e.alive&&rectCircle(h,e)){killEnemy(e,'fall');hit=true}}for(const b of world.barrels){if(b.alive&&rectCircle(h,b)){explodeBarrel(b,'fall');hit=true}}if(h.y+h.h>=595){h.y=595-h.h;h.vy=0;h.falling=false;hit=true}if(hit&&h.kind==='piano')stats.piano=true}
+  // pending events
+  for(let i=pending.length-1;i>=0;i--){pending[i].t-=dt;if(pending[i].t<=0){const fn=pending[i].fn;pending.splice(i,1);fn()}}
+  // bullets
+  if(bullet?.alive)stepBullet(bullet,dt,true);
+  for(let i=secondary.length-1;i>=0;i--){const p=secondary[i];stepBullet(p,dt,false);if(!p.alive)secondary.splice(i,1)}
+  // particles
+  for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=(p.gravity||0)*dt;if(p.life<=0)particles.splice(i,1)}
+  for(let i=floating.length-1;i>=0;i--){floating[i].life-=dt;floating[i].y-=18*dt;if(floating[i].life<=0)floating.splice(i,1)}
+  if(fired)checkResolution(dt);
+}
+function rectCircle(r,c){const nx=clamp(c.x,r.x,r.x+r.w),ny=clamp(c.y,r.y,r.y+r.h);return (c.x-nx)**2+(c.y-ny)**2<(c.r||18)**2}
+function stepBullet(b,dt,main){if(!b.alive)return;b.life+=dt;if(b.life>3.8||b.energy<.18||b.x<-40||b.x>W+40||b.y<-40||b.y>H+40){b.alive=false;return}if(b.hitCooldown>0)b.hitCooldown-=dt;const ox=b.x,oy=b.y;b.x+=b.vx*dt;b.y+=b.vy*dt;
+  if(main){
+    // rope cuts
+    for(const r of world.ropes){if(!r.cut&&pointSegDist(b.x,b.y,r.x1,r.y1,r.x2,r.y2)<10){r.cut=true;stats.rope++;recordEvent('rope',b.x,b.y,45);sfx('snap');burst(b.x,b.y,'fiber');const h=world.hangings.find(x=>x.id===r.hangId);if(h){h.falling=true;h.vy=10}triggerReactions('rope:'+r.id)}}
+    // switches
+    for(const s of world.switches){if(!s.active&&circleRect(b.x,b.y,b.r+2,s)){s.active=true;stats.switches++;recordEvent('switch',s.x,s.y,70);sfx('switch');burst(s.x+10,s.y+14,'spark');activateAction(s.action);triggerReactions('switch:'+s.id)}}
+    // panels
+    for(const p of world.panels){if(!p.active&&circleRect(b.x,b.y,b.r+2,p)){p.active=true;stats.electric++;recordEvent('electric',p.x,p.y,100);sfx('zap');burst(p.x+14,p.y+16,'electric');if(p.puddle)electrify(p.puddle);triggerReactions('panel:'+p.id);if(!p.sparkOnly){b.alive=false;return}else{b.energy*=.9;b.x+=Math.sign(b.vx)*8;b.y+=Math.sign(b.vy)*8}}}
+    // barrels
+    for(const br of world.barrels){if(br.alive&&Math.hypot(b.x-br.x,b.y-br.y)<br.r+b.r){explodeBarrel(br,'bullet');if(!br.passBullet){b.alive=false;return}else{b.energy*=.82;b.x+=Math.sign(b.vx)*10;b.y+=Math.sign(b.vy)*10}}}
+  }
+  if(!main){for(const br of world.barrels){if(br.alive&&Math.hypot(b.x-br.x,b.y-br.y)<br.r+b.r){explodeBarrel(br,'enemyShot');b.alive=false;return}}}
+  // enemies
+  for(const e of world.enemies){if(!e.alive)continue;if(!main&&e.id===b.ownerId)continue;if(Math.hypot(b.x-e.x,b.y-e.y)<e.r+b.r){if(main&&(e.type==='armored'||e.type==='heavy'||e.type==='boss')){sparkAt(b.x,b.y);sfx('ting');b.vx*=-.65;b.vy*=-.65;b.energy*=.6;b.hitCooldown=.05;recordEvent('armor',e.x,e.y,20);return}else if(main&&e.type==='shield'){b.vx*=-.8;b.energy*=.72;b.bounces++;stats.ricochets++;sfx('ting');sparkAt(b.x,b.y);recordEvent('ricochet',b.x,b.y,25);return}else{killEnemy(e,main?'direct':'enemy');b.alive=false;return}}}
+  // walls + doors + movers
+  const colliders=[...world.walls,...world.movers,...world.doors.filter(d=>!d.open)];
+  for(const o of colliders){if(!circleRect(b.x,b.y,b.r,o))continue;const mat=o.material||'concrete';if(mat==='glass'&&main){const key=o.id||`${o.x},${o.y}`;if(!b.glassHit.has(key)){b.glassHit.add(key);b.vx*=.83;b.vy*=.83;b.energy*=.9;stats.glass++;recordEvent('glass',b.x,b.y,25);sfx('glass');burst(b.x,b.y,'glass');b.x+=Math.sign(b.vx)*8;b.y+=Math.sign(b.vy)*8;return}continue}
+    if(mat==='wood'&&main&&b.energy>.55){b.energy*=.62;b.vx*=.78;b.vy*=.78;recordEvent('wood',b.x,b.y,20);burst(b.x,b.y,'wood');b.x+=Math.sign(b.vx)*12;b.y+=Math.sign(b.vy)*12;return}
+    if(mat==='steel'||mat==='rubber'){
+      // determine entry side using previous position
+      let flipX=false,flipY=false;if(ox+b.r<=o.x&&b.x+b.r>=o.x)flipX=true;else if(ox-b.r>=o.x+o.w&&b.x-b.r<=o.x+o.w)flipX=true;if(oy+b.r<=o.y&&b.y+b.r>=o.y)flipY=true;else if(oy-b.r>=o.y+o.h&&b.y-b.r<=o.y+o.h)flipY=true;if(!flipX&&!flipY){const dl=Math.abs(b.x-o.x),dr=Math.abs(b.x-(o.x+o.w)),dtp=Math.abs(b.y-o.y),db=Math.abs(b.y-(o.y+o.h)),mn=Math.min(dl,dr,dtp,db);flipX=mn===dl||mn===dr;flipY=!flipX}
+      if(flipX)b.vx*=-1;if(flipY)b.vy*=-1;const mult=mat==='rubber'?1.02:.88;b.vx*=mult;b.vy*=mult;b.energy*=mat==='rubber'?.93:.82;b.bounces++;if(main){stats.ricochets++;if(world.movers.includes(o))stats.movingRicochet=true;recordEvent('ricochet',b.x,b.y,25)}sfx('ting');sparkAt(b.x,b.y);b.x=ox;b.y=oy;return
+    }
+    b.alive=false;burst(b.x,b.y,'dust');return;
+  }
+}
+function activateAction(a){if(!a)return;if(a.type==='drop'){const h=world.hangings.find(x=>x.id===a.target);if(h){h.falling=true;h.vy=12;recordEvent('drop',h.x+h.w/2,h.y,60)}}else if(a.type==='openDoor'){const d=world.doors.find(x=>x.id===a.target);if(d){d.open=true;recordEvent('door',d.x,d.y,35)}}else if(a.type==='pushBarrel'){const b=world.barrels.find(x=>x.id===a.target);if(b){b.vx=a.vx||190;recordEvent('move',b.x,b.y,40);pending.push({t:.85,fn:()=>{if(b.alive&&Math.abs(b.vx)<100)explodeBarrel(b,'conveyor')}})}}else if(a.type==='pullBarrel'){const b=world.barrels.find(x=>x.id===a.target);if(b){const tx=a.toward?.x||900;b.vx=(tx>b.x?1:-1)*260;recordEvent('magnet',b.x,b.y,50);pending.push({t:.7,fn:()=>{if(b.alive)explodeBarrel(b,'magnet')}})}}}
+function electrify(pid){const p=world.puddles.find(x=>x.id===pid);if(!p)return;let kills=0;for(const e of world.enemies)if(e.alive&&e.x>p.x&&e.x<p.x+p.w&&e.y>p.y-20&&e.y<p.y+p.h+20){killEnemy(e,'electric');kills++}for(let i=0;i<18;i++)particles.push({x:p.x+Math.random()*p.w,y:p.y+Math.random()*p.h,vx:(Math.random()-.5)*80,vy:(Math.random()-.5)*40,life:.25+Math.random()*.25,size:2+Math.random()*3,kind:'electric'})}
+function explodeBarrel(br,source){if(!br||!br.alive)return;br.alive=false;stats.explosions++;recordEvent('explosion',br.x,br.y,100);sfx('boom');shake=Math.max(shake,save.settings.reducedShake?3:11);burst(br.x,br.y,'boom');let kills=0;const R=br.blast||0;if(R>0){for(const e of world.enemies){if(e.alive&&Math.hypot(e.x-br.x,e.y-br.y)<R){killEnemy(e,'explosion');kills++}}for(const b2 of world.barrels){if(b2.alive&&b2!==br&&Math.hypot(b2.x-br.x,b2.y-br.y)<R*.95)pending.push({t:.09,fn:()=>explodeBarrel(b2,'chain')})}for(const r of world.ropes){if(!r.cut&&pointSegDist(br.x,br.y,r.x1,r.y1,r.x2,r.y2)<R*.8){r.cut=true;stats.rope++;const h=world.hangings.find(x=>x.id===r.hangId);if(h){h.falling=true;h.vy=20}recordEvent('rope',r.x1,r.y2,40)}}}if(br.triggerRope){const r=world.ropes.find(x=>x.id===br.triggerRope);if(r&&!r.cut){r.cut=true;stats.rope++;recordEvent
