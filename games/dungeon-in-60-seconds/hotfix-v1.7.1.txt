@@ -1,0 +1,66 @@
+// v1.7.1 attack hotfix
+// Fixes v1.7 attackCd lock and provides reliable press/hold attack on touch, keyboard and mouse.
+const V171='1.7.1';
+const sub171=document.querySelector('#menu .sub');if(sub171)sub171.innerHTML=sub171.innerHTML.replace(/v\d+\.\d+(?:\.\d+)?/,'v1.7.1');
+
+// Use a real-time cooldown rather than attackCd, which was not being decremented in v1.7.
+attack=function(tx=null,ty=null){
+  if(!game||game.paused||!game.running)return false;
+  const p=game.player,now=performance.now()/1000;
+  const ranged=p.weapon.type==='ranged'||save.selectedHero==='wizard'||save.selectedHero==='ranger';
+  let target=nearestEnemy(9999),ang=game.lastAim||-Math.PI/2;
+  if(tx!=null&&ty!=null)ang=Math.atan2(ty-p.y,tx-p.x);else if(target)ang=Math.atan2(target.y-p.y,target.x-p.x);
+  game.lastAim=ang;p.swingAng=ang;p.swing=Math.max(p.swing||0,.32);
+  let rate=Math.max(.10,(p.rate+p.weapon.rate)/(1+p.buffs.atkSpeed+(p.rage>0?.45:0)))*.82;
+  if(ranged)rate=Math.min(rate,.34);
+  if(save.selectedHero==='knight'&&p.weapon.n==='Iron Sword')rate=Math.min(rate,.25);
+  if(now-(p.lastAtk171??-99)<rate)return false;
+  p.lastAtk171=now;
+  p.attackCd=0;
+  const range=(p.weapon.type==='ranged'?p.weapon.range:p.range+p.weapon.range),dmg=p.damage+p.weapon.dmg;
+  if(ranged){
+    const muzzle=p.r+7;
+    game.projectiles.push({x:p.x+Math.cos(ang)*muzzle,y:p.y+Math.sin(ang)*muzzle,vx:Math.cos(ang)*560,vy:Math.sin(ang)*560,r:7,life:range/560+.28,dmg,player:true,burn:p.weapon.burn,color:p.weapon.burn?'#ff9955':'#d6e7ff'});
+    tone(320,.03,'square',.015,80);
+  }else{
+    const style=p.weapon.style||'balanced',arc=style==='heavy'||style==='shock'?1.48:style==='reach'?.43:style==='fast'?.92:1.05,mult=style==='heavy'?1.18:style==='reach'?1.12:1,hits=style==='fast'?2:1;
+    let hit=0;
+    tone(style==='heavy'||style==='shock'?145:style==='fast'?285:210,.04,style==='heavy'||style==='shock'?'sawtooth':'triangle',.014,90);
+    for(const e of game.enemies){
+      if(e.dead)continue;
+      const dx=e.x-p.x,dy=e.y-p.y,dist=Math.hypot(dx,dy),da=Math.atan2(dy,dx),diff=Math.atan2(Math.sin(da-ang),Math.cos(da-ang));
+      if(dist<=range+e.r&&Math.abs(diff)<arc){
+        for(let h=0;h<hits;h++)damageEnemy(e,dmg*mult*(hits===2?.58:1)*(rng()<p.buffs.crit?1.8:1));
+        hit++;
+        if(style==='heavy'||style==='shock'){const push=26,mm=Math.hypot(dx,dy)||1;e.x+=dx/mm*push;e.y+=dy/mm*push}
+      }
+    }
+    if(hit&&p.weapon.chain){const first=nearestEnemy(165);if(first)damageEnemy(first,dmg*.72)}
+    if(hit){game.shake=Math.max(game.shake,style==='heavy'||style==='shock'?7:3);sfx('hit')}
+  }
+  return true;
+};
+
+let heldAttack171=false,mouseAttack171=null,aim171=null;
+function clearAttack171(){heldAttack171=false;mouseAttack171=null;aim171=null}
+const attackBtn171=document.querySelector('#attackBtn');
+if(attackBtn171){
+  attackBtn171.onpointerdown=e=>{e.preventDefault();heldAttack171=true;attack();try{attackBtn171.setPointerCapture(e.pointerId)}catch(_){}};
+  const end=e=>{e.preventDefault();heldAttack171=false};
+  attackBtn171.onpointerup=end;attackBtn171.onpointercancel=end;attackBtn171.onlostpointercapture=()=>heldAttack171=false;
+}
+addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();heldAttack171=true;if(!e.repeat)attack()}});
+addEventListener('keyup',e=>{if(e.code==='Space')heldAttack171=false});
+canvas.onpointerdown=e=>{if(game&&!game.paused&&!touchCap){e.preventDefault();mouseAttack171=e.pointerId;heldAttack171=true;aim171={x:e.clientX,y:e.clientY};attack(e.clientX,e.clientY);try{canvas.setPointerCapture(e.pointerId)}catch(_){}}};
+canvas.onpointermove=e=>{if(e.pointerId===mouseAttack171)aim171={x:e.clientX,y:e.clientY}};
+canvas.onpointerup=e=>{if(e.pointerId===mouseAttack171)clearAttack171()};canvas.onpointercancel=e=>{if(e.pointerId===mouseAttack171)clearAttack171()};
+
+const _update171=update;
+update=function(dt){
+  if(game?.player?.swing>0)game.player.swing=Math.max(0,game.player.swing-dt);
+  _update171(dt);
+  if(heldAttack171&&game&&!game.paused&&game.running)attack(aim171?.x??null,aim171?.y??null);
+};
+const _pause171=pause;pause=function(){clearAttack171();return _pause171()};
+const _end171=endRun;endRun=function(reason){clearAttack171();return _end171(reason)};
+addEventListener('blur',clearAttack171);
