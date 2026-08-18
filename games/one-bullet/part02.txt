@@ -1,0 +1,77 @@
+ton></div><div class="howGrid">
+    <div class="howCard"><b>1. Observe</b><span>Read the room. Materials are consistent: silver steel ricochets, concrete stops, glass penetrates, ropes snap, red barrels explode.</span></div>
+    <div class="howCard"><b>2. Aim</b><span>Desktop: move the pointer and click. Touch: drag anywhere to aim, then release, or use the FIRE button. Only the first trajectory segment is shown.</span></div>
+    <div class="howCard"><b>3. Chain it</b><span>The bullet is often only the trigger. Drop objects, start explosions, activate switches, and exploit enemy reactions.</span></div>
+    <div class="howCard"><b>4. Retry fast</b><span>Press R or tap ↻ to rebuild the exact starting state instantly. Handcrafted puzzle outcomes are deterministic.</span></div>
+    <div class="howCard"><b>Stars</b><span>One star completes a level. Two stars require no hint. Three stars require the special Perfect Shot objective and no hint.</span></div>
+    <div class="howCard"><b>Accessibility</b><span>Sound is never required. Surfaces also differ by texture and shape, not just color. Screen shake can be reduced in Settings.</span></div>
+  </div></div></section>
+  <section id="settings" class="screen menuScreen"><div class="contentCard"><div class="topRow"><div><h2 class="sectionTitle">SETTINGS</h2><div class="sectionText">Saved locally in this browser.</div></div><button class="btn backBtn" data-screen="menu">BACK</button></div><div style="margin-top:22px">
+    <div class="settingRow"><div class="settingMeta"><b>Sound effects</b><span>Generated locally with Web Audio. No external assets.</span></div><button class="btn toggle" id="soundToggle"></button></div>
+    <div class="settingRow"><div class="settingMeta"><b>Music pulse</b><span>A subtle procedural ambience during gameplay.</span></div><button class="btn toggle" id="musicToggle"></button></div>
+    <div class="settingRow"><div class="settingMeta"><b>Reduced screen shake</b><span>Minimizes camera movement during explosions and heavy impacts.</span></div><button class="btn toggle" id="shakeToggle"></button></div>
+    <div class="settingRow"><div class="settingMeta"><b>Replay tutorial</b><span>Return to the first training level.</span></div><button class="btn" id="tutorialBtn">PLAY TUTORIAL</button></div>
+    <div class="settingRow"><div class="settingMeta"><b>Reset progress</b><span>Clears level stars, achievements, daily results, and tutorial progress.</span></div><button class="btn danger" id="resetBtn">RESET PROGRESS</button></div>
+  </div></div></section>
+
+  <section id="game" class="screen">
+    <div class="gameFrame" id="gameFrame">
+      <canvas id="canvas" width="1200" height="675" aria-label="One Bullet game area"></canvas>
+      <div class="hud">
+        <div class="hudTop"><div class="hudBox"><div class="levelTitleHud" id="hudLevel">LEVEL 1</div><div class="objectiveHud" id="hudObjective">Eliminate all guards.</div><div class="materialLegend"><span class="legendItem">▧ steel = bounce</span><span class="legendItem">▤ concrete = stop</span><span class="legendItem">◇ glass = pass</span><span class="legendItem">║ rope = cut</span></div></div><div class="hudBox"><div class="hudStat">TARGETS <b id="hudTargets">0/0</b></div><div class="hudStat">CHAIN <b id="hudChain">×0</b></div></div></div>
+        <div class="hudControls"><div class="controlCluster"><button class="roundBtn" id="backGameBtn" title="Level select">☰</button><button class="roundBtn" id="retryBtn" title="Retry">↻</button><button class="roundBtn" id="hintBtn" title="Hint">?</button><button class="roundBtn" id="pauseBtn" title="Pause">Ⅱ</button></div><div class="controlCluster"><button class="fireBtn" id="fireBtn">FIRE</button></div></div>
+      </div>
+      <div class="aimTip" id="aimTip">Drag to aim • release to fire</div>
+      <div class="toast" id="toast"></div><div class="chainTag" id="chainTag">CHAIN ×2</div>
+      <div class="overlay" id="resultOverlay"><div class="resultCard"><div class="resultKicker" id="resultKicker">LEVEL COMPLETE</div><div class="resultTitle" id="resultTitle">NICE SHOT</div><div class="resultStars" id="resultStars">⭐⭐⭐</div><div class="perfectBanner" id="perfectBanner"></div><div class="resultDetails" id="resultDetails"></div><div class="hintText" id="hintText" style="display:none"></div><div class="resultBtns" id="resultBtns"></div></div></div>
+      <div class="overlay" id="pauseOverlay"><div class="resultCard pauseCard"><h2>PAUSED</h2><div class="pauseBtns"><button class="btn primary" id="resumeBtn">RESUME</button><button class="btn" id="pauseRestartBtn">RESTART</button><button class="btn" id="pauseSettingsBtn">SETTINGS</button><button class="btn" id="pauseMenuBtn">MAIN MENU</button></div></div></div>
+    </div>
+  </section>
+</div>
+<script>
+'use strict';
+(() => {
+const W=1200,H=675, TAU=Math.PI*2;
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+const deepClone=o=>JSON.parse(JSON.stringify(o));
+const idMap=(arr)=>Object.fromEntries((arr||[]).map(o=>[o.id,o]));
+const SAVE_KEY='oneBulletSave_v1';
+const defaultSave={version:1,stars:{},perfect:{},completed:{},achievements:{},daily:{},tutorialDone:false,settings:{sound:true,music:false,reducedShake:false}};
+let save=loadSave();
+function loadSave(){try{const x=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(!x||typeof x!=='object')return deepClone(defaultSave);return {...deepClone(defaultSave),...x,settings:{...defaultSave.settings,...(x.settings||{})}}}catch(e){return deepClone(defaultSave)}}
+function writeSave(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(save))}catch(e){}}
+function resetSave(){save=deepClone(defaultSave);writeSave();refreshAllUI()}
+
+// ---------- Audio: small procedural effects, no assets ----------
+let audioCtx=null, musicTimer=null;
+function ensureAudio(){if(!audioCtx){const AC=window.AudioContext||window.webkitAudioContext;if(AC) audioCtx=new AC()} if(audioCtx&&audioCtx.state==='suspended') audioCtx.resume()}
+function tone(freq=440,dur=.08,type='sine',gain=.045,slide=0,force=false){if(!save.settings.sound&&!force)return;ensureAudio();if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,audioCtx.currentTime);if(slide)o.frequency.exponentialRampToValueAtTime(Math.max(30,freq+slide),audioCtx.currentTime+dur);g.gain.setValueAtTime(gain,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+dur);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur)}
+function sfx(name){({shot:()=>{tone(95,.08,'square',.09,-35);setTimeout(()=>tone(55,.09,'triangle',.06,-20),18)},ting:()=>tone(1080,.09,'sine',.035,-120),glass:()=>{tone(1400,.07,'triangle',.025,-450);tone(920,.11,'triangle',.015,-250)},snap:()=>tone(290,.07,'square',.03,-80),boom:()=>{tone(72,.24,'sawtooth',.12,-38);tone(45,.3,'triangle',.08,-12)},switch:()=>tone(520,.07,'square',.025,90),zap:()=>{tone(170,.12,'square',.04,220);setTimeout(()=>tone(730,.08,'square',.02,-300),30)},enemy:()=>tone(220,.06,'triangle',.025,-70),success:()=>{tone(523,.11,'sine',.04,0);setTimeout(()=>tone(659,.11,'sine',.04,0),90);setTimeout(()=>tone(784,.18,'sine',.05,0),180)},fail:()=>{tone(180,.12,'triangle',.035,-40);setTimeout(()=>tone(120,.18,'triangle',.03,-35),110)}}[name]||(()=>{}))()}
+function updateMusic(){clearInterval(musicTimer);musicTimer=null;if(save.settings.music&&$('#game').classList.contains('active')){musicTimer=setInterval(()=>{if(!audioCtx)return;const freqs=[110,146.8,164.8,220];tone(freqs[(Date.now()/1300|0)%freqs.length],.22,'sine',.008,0,true)},1300)}}
+
+// ---------- Reusable constructors ----------
+const wall=(x,y,w,h,material='concrete',extra={})=>({x,y,w,h,material,...extra});
+const enemy=(id,x,y,type='normal',extra={})=>({id,x,y,type,r:18,alive:true,...extra});
+const barrel=(id,x,y,extra={})=>({id,x,y,r:20,alive:true,...extra});
+const rope=(id,x1,y1,x2,y2,hangId,extra={})=>({id,x1,y1,x2,y2,hangId,cut:false,...extra});
+const hang=(id,x,y,w,h,extra={})=>({id,x,y,w,h,vy:0,falling:false,alive:true,...extra});
+const sw=(id,x,y,action,extra={})=>({id,x,y,w:20,h:28,active:false,action,...extra});
+const panel=(id,x,y,puddle,extra={})=>({id,x,y,w:28,h:34,active:false,puddle,...extra});
+const puddle=(id,x,y,w,h)=>({id,x,y,w,h});
+const mover=(id,x,y,w,h,axis,min,max,speed,extra={})=>({id,x,y,w,h,axis,min,max,speed,dir:1,material:'steel',...extra});
+const door=(id,x,y,w,h,material='concrete',extra={})=>({id,x,y,w,h,material,open:false,...extra});
+function baseLevel(n,name,chapter,player,enemies,opts={}){return {n,name,chapter,player,enemies,walls:[],barrels:[],ropes:[],hangings:[],switches:[],panels:[],puddles:[],movers:[],doors:[],hostages:[],objective:'Eliminate all guards.',perfect:{type:'noDirect',text:'No direct kills'},hints:['The room can do more work than the bullet.','Look for the most reactive object.','Try triggering the highlighted mechanism first.'],...opts}}
+
+// ---------- 30 handcrafted levels ----------
+const levels=[];
+levels.push(baseLevel(1,'First Contact','Warehouse',{x:120,y:540},[enemy('e1',930,455)],{objective:'Aim and eliminate the guard.',perfect:{type:'direct',text:'Clean direct hit'},hints:['Aim directly at the guard.','The yellow line shows only the first segment.','Put the reticle over the guard.']}));
+levels.push(baseLevel(2,'Red Means Boom','Warehouse',{x:105,y:540},[enemy('e1',875,475),enemy('e2',955,475)],{barrels:[barrel('b1',915,485)],perfect:{type:'explosionsExactly',value:1,text:'One explosion, both guards'},hints:['The guards are standing too close to something dangerous.','Red objects are explosive.','Shoot the barrel between them.']}));
+levels.push(baseLevel(3,'Bank Job','Warehouse',{x:110,y:560},[enemy('e1',360,180)],{walls:[wall(580,90,22,420,'steel')],perfect:{type:'ricochetsAtLeast',value:1,text:'Use the steel wall'},hints:['A direct path is blocked by geometry.','Silver steel reflects the bullet.','Bounce off the tall steel plate toward the guard.']}));
+levels.push(baseLevel(4,'Cut Above','Warehouse',{x:105,y:545},[enemy('e1',870,510),enemy('e2',950,510)],{ropes:[rope('r1',900,90,900,220,'h1')],hangings:[hang('h1',835,220,130,54,{kind:'crate'})],walls:[wall(720,420,300,18,'wood')],perfect:{type:'noDirect',text:'Drop the crate'},hints:['The bullet does not need to touch a guard.','Look above them.','Cut the rope holding the crate.']}));
+levels.push(baseLevel(5,'Through the Looking Glass','Warehouse',{x:95,y:530},[enemy('e1',980,285)],{walls:[wall(500,160,18,340,'glass'),wall(740,360,260,18,'concrete')],perfect:{type:'glass',text:'Shoot through glass'},hints:['Transparent surfaces do not stop a bullet.','Glass slows the bullet but lets it through.','Aim through the glass panel at the guard.']}));
+levels.push(baseLevel(6,'Warehouse Foreman','Warehouse',{x:100,y:555},[enemy('e1',860,505,'armored'),enemy('e2',965,505)],{barrels:[barrel('b1',905,505)],walls:[wall(420,300,520,18,'steel')],perfect:{type:'ricochetsAndExplosion',ric:1,exp:1,text:'Bank into the barrel'},hints:['The armoured guard shrugs off a direct bullet.','An explosion can defeat armour.','Bank the shot off steel into the barrel.']}));
+
+levels.push(baseLevel(7,'Penthouse Welcome','Penthouse',{x:110,y:545},[enemy('e1',835,505),enemy('e2',955,505)],{ropes:[rope('r1',900,80,900,205,'h1')],hangings:[hang('h1',835,205,130,40,{kind:'chandelier'})],perfect:{type:'noDirect',text:'Chandelier only'},hints:['Something expensive is hanging above the guards.','Ropes can be cut.','Drop the chandelier.']}));
+levels.push(baseLevel(8,'Glass House','Penthouse',{x:110,y:530},[enemy('e1',975,500,'armored')],{barrels:[barrel('b1',930,500)],walls:[wall(530,105,18,450,'glass'),wall(540,345,430,18,'steel')],perfect:{type:'glassRicochetExplosion',text:'Glass, steel, boom'},hints:['Glass does not end the shot.','The steel ceiling can turn an upward shot back down.','Aim as thou
