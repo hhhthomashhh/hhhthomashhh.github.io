@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#090d1d">
+<title>Block Blast Arena</title>
+<style>
+html,body{margin:0;width:100%;height:100%;background:#090d1d;color:#f5f8ff;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;display:grid;place-items:center;overflow:hidden}#load{text-align:center;padding:24px}.spinner{width:44px;height:44px;margin:0 auto 14px;border:4px solid rgba(255,255,255,.18);border-top-color:#6ef3ff;border-radius:50%;animation:s .8s linear infinite}@keyframes s{to{transform:rotate(360deg)}}small{color:#aeb9d9}
+</style>
+</head>
+<body>
+<div id="load"><div class="spinner"></div><strong>Loading Block Blast Arena…</strong><br><small>Clear. Attack. Survive.</small></div>
+<script>
+(async()=>{
+  try{
+    if(typeof DecompressionStream==='undefined') throw new Error('This browser is too old for the hosted game package.');
+    const [a,b]=await Promise.all([
+      fetch('payload1.txt').then(r=>{if(!r.ok)throw new Error('Game data 1 failed to load');return r.text()}),
+      fetch('payload2.txt').then(r=>{if(!r.ok)throw new Error('Game data 2 failed to load');return r.text()})
+    ]);
+    const raw=atob((a+b).trim());
+    const bytes=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++) bytes[i]=raw.charCodeAt(i);
+    const stream=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+    const html=await new Response(stream).text();
+    document.open();
+    document.write(html);
+    document.close();
+  }catch(err){
+    document.getElementById('load').innerHTML='<strong>Block Blast Arena could not load.</strong><br><small>'+String(err.message||err)+'</small>';
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>
