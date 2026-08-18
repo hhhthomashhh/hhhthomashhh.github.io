@@ -1,0 +1,2 @@
+Dungeon in 60 Seconds v1.7 final deployment marker
+Includes iPad movement, weapon arsenal/swap, larger time rewards, and combat incentives.
