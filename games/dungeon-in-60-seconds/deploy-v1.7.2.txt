@@ -1,0 +1,2 @@
+Dungeon in 60 Seconds v1.7.2 deployment marker
+Fixes NaN time displays, rebalances clock choice to +15 sec, and raises choice overlay above touch movement zone.
