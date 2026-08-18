@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+<meta name="theme-color" content="#0a0d12" />
+<title>ONE BULLET — One shot. One solution.</title>
+<style>
+  :root{--bg:#090c11;--panel:#111722;--panel2:#171f2c;--ink:#f3f6fb;--muted:#9ca9bb;--accent:#f6c945;--accent2:#ff6b55;--good:#69dfa2;--danger:#ff5f66;--line:#273245;--safeTop:env(safe-area-inset-top,0px);--safeBottom:env(safe-area-inset-bottom,0px)}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;background:radial-gradient(circle at 50% -20%,#1d2736 0,#0b0f16 45%,#07090d 100%);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  button{font:inherit;color:inherit}
+  .app{width:100%;height:100%;padding-top:var(--safeTop);padding-bottom:var(--safeBottom);display:flex;align-items:stretch;justify-content:center}
+  .screen{display:none;width:100%;height:100%;overflow:auto;overscroll-behavior:none}
+  .screen.active{display:flex}
+  .menuScreen{align-items:center;justify-content:center;padding:28px 18px;touch-action:pan-y}
+  .menuCard{width:min(900px,96vw);min-height:min(760px,94vh);border:1px solid #293549;border-radius:28px;background:linear-gradient(180deg,rgba(20,28,40,.96),rgba(9,13,20,.98));box-shadow:0 30px 100px rgba(0,0,0,.45);padding:clamp(22px,4vw,54px);display:flex;flex-direction:column;gap:22px;position:relative;overflow:hidden}
+  .menuCard:before{content:"";position:absolute;inset:-100px auto auto -80px;width:400px;height:400px;background:radial-gradient(circle,rgba(246,201,69,.12),transparent 70%);pointer-events:none}
+  .title{font-size:clamp(52px,10vw,116px);line-height:.83;letter-spacing:-.065em;font-weight:1000;margin:0;position:relative;text-shadow:0 10px 40px rgba(0,0,0,.4)}
+  .title span{color:var(--accent)}
+  .subtitle{font-size:clamp(18px,3vw,28px);color:#cad3df;margin-top:-8px;letter-spacing:.02em}
+  .tagline{display:inline-flex;align-items:center;gap:10px;color:#0a0d12;background:var(--accent);font-weight:900;border-radius:999px;padding:9px 14px;width:max-content;box-shadow:0 8px 30px rgba(246,201,69,.18)}
+  .menuStats{display:flex;gap:10px;flex-wrap:wrap}.chip{background:#0d131d;border:1px solid #253248;border-radius:14px;padding:11px 14px;color:#ccd5e1;font-weight:750}.chip b{color:var(--ink)}
+  .menuBtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:auto}
+  .btn{border:1px solid #2d3a50;background:linear-gradient(#1c2635,#141c28);min-height:52px;border-radius:15px;padding:12px 18px;font-weight:900;letter-spacing:.015em;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.05);transition:transform .08s ease,filter .15s ease,border-color .15s ease}
+  .btn:hover{filter:brightness(1.12);border-color:#445670}.btn:active{transform:translateY(1px) scale(.99)}.btn.primary{background:linear-gradient(#f8d659,#eebf30);color:#111;border-color:#ffe47a}.btn.danger{border-color:#713e45;color:#ffd8db}.btn.ghost{background:#0d131c}.btn.small{min-height:42px;padding:8px 12px;border-radius:12px;font-size:14px}
+  .sectionTitle{font-size:clamp(30px,5vw,52px);letter-spacing:-.035em;margin:0 0 6px}.sectionText{color:var(--muted);line-height:1.55;max-width:75ch}
+  .topRow{display:flex;align-items:center;gap:12px;justify-content:space-between}.backBtn{min-width:100px}
+  .contentCard{width:min(1100px,96vw);height:min(900px,95vh);margin:auto;touch-action:pan-y;border:1px solid #293549;border-radius:24px;background:rgba(12,17,25,.97);padding:clamp(18px,3vw,34px);overflow:auto;overscroll-behavior:contain}
+  .chapter{margin:28px 0}.chapterHead{display:flex;align-items:end;gap:12px;margin-bottom:12px}.chapterHead h3{margin:0;font-size:22px}.chapterHead span{color:var(--muted);font-size:14px}
+  .levelGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px}.levelBtn{min-height:98px;border-radius:16px;border:1px solid #2b3950;background:linear-gradient(#182231,#111926);text-align:left;padding:13px;cursor:pointer}.levelBtn.locked{opacity:.38;filter:saturate(.3);cursor:not-allowed}.levelNum{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase}.levelName{font-size:15px;font-weight:900;margin:5px 0 8px}.stars{letter-spacing:1px;color:var(--accent);font-weight:900}.stars .off{color:#3d4655}.perfectMark{font-size:11px;color:var(--good);font-weight:900;margin-top:5px}
+  .achievementGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:11px}.ach{padding:15px;border-radius:16px;border:1px solid #29364b;background:#111824}.ach.locked{opacity:.45}.achIcon{font-size:26px}.achName{font-weight:950;margin:8px 0 3px}.achDesc{font-size:13px;color:var(--muted);line-height:1.35}
+  .settingRow{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:15px 0;border-bottom:1px solid #212b3a}.settingRow:last-child{border-bottom:0}.settingMeta b{display:block}.settingMeta span{display:block;color:var(--muted);font-size:13px;margin-top:4px}.toggle{min-width:95px}
+  .howGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:18px}.howCard{border:1px solid #28364a;background:#111824;border-radius:16px;padding:16px}.howCard b{display:block;font-size:18px;margin-bottom:7px}.howCard span{color:var(--muted);line-height:1.45;font-size:14px}
+
+  #game{position:relative;align-items:center;justify-content:center;background:#070a0f;overflow:hidden}
+  .gameFrame{position:relative;width:100%;height:100%;display:flex;align-items:center;justify-content:center;padding:0;touch-action:none}
+  canvas{display:block;background:#090d13;max-width:100%;max-height:100%;touch-action:none;outline:none}
+  .hud{position:absolute;inset:0;pointer-events:none;padding:calc(10px + var(--safeTop)) 12px calc(10px + var(--safeBottom));display:flex;flex-direction:column;justify-content:space-between}
+  .hudTop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.hudBox{background:rgba(7,10,15,.8);border:1px solid rgba(70,87,112,.55);backdrop-filter:blur(8px);border-radius:14px;padding:10px 12px;box-shadow:0 5px 24px rgba(0,0,0,.22)}.levelTitleHud{font-weight:950;font-size:16px}.objectiveHud{color:#bac5d4;font-size:12px;margin-top:3px;max-width:48vw}.hudStat{display:flex;gap:8px;align-items:center;font-size:12px;font-weight:850;color:#c9d4e2}.hudStat b{color:white}
+  .hudControls{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;pointer-events:none}.controlCluster{display:flex;gap:8px;pointer-events:auto}.roundBtn{width:48px;height:48px;border-radius:14px;border:1px solid #33445e;background:rgba(15,22,32,.9);font-size:19px;font-weight:950;cursor:pointer}.fireBtn{min-width:112px;height:56px;border-radius:18px;border:2px solid #ffe27a;background:linear-gradient(#f9d85f,#e9b928);color:#111;font-weight:1000;font-size:19px;letter-spacing:.06em;box-shadow:0 7px 35px rgba(246,201,69,.22);cursor:pointer}.fireBtn:disabled{opacity:.28;filter:grayscale(.7)}
+  .aimTip{position:absolute;left:50%;bottom:88px;transform:translateX(-50%);background:rgba(7,10,14,.75);border:1px solid #2c394d;border-radius:999px;padding:7px 12px;font-size:12px;color:#bec9d6;pointer-events:none;white-space:nowrap}
+  .toast{position:absolute;left:50%;top:17%;transform:translate(-50%,-10px);background:rgba(9,13,18,.92);border:1px solid #384861;border-radius:999px;padding:10px 16px;font-weight:950;opacity:0;transition:opacity .16s,transform .16s;pointer-events:none;z-index:8}.toast.show{opacity:1;transform:translate(-50%,0)}
+  .chainTag{position:absolute;right:18px;top:28%;font-size:clamp(22px,4vw,44px);font-weight:1000;color:var(--accent);text-shadow:0 4px 18px #000;opacity:0;transform:scale(.8);transition:.12s;pointer-events:none}.chainTag.show{opacity:1;transform:scale(1)}
+  .overlay{position:absolute;inset:0;background:rgba(4,6,9,.72);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;padding:18px;z-index:20;pointer-events:auto}.overlay.show{display:flex}.resultCard{width:min(520px,94vw);border-radius:24px;border:1px solid #34445c;background:linear-gradient(#151e2a,#0c121b);padding:25px;box-shadow:0 30px 80px rgba(0,0,0,.45);text-align:center}.resultKicker{font-size:13px;color:var(--muted);font-weight:900;letter-spacing:.16em;text-transform:uppercase}.resultTitle{font-size:clamp(38px,7vw,64px);font-weight:1000;letter-spacing:-.05em;margin:7px 0}.resultStars{font-size:36px;color:var(--accent);letter-spacing:4px}.resultDetails{color:#b7c1ce;line-height:1.5;margin:12px 0 18px}.resultBtns{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.resultBtns .primary{grid-column:1/-1}.perfectBanner{color:var(--good);font-weight:1000;letter-spacing:.08em;margin-top:4px}.hintText{margin:14px 0;padding:13px;border-radius:14px;background:#0b111a;border:1px solid #29384d;color:#d8e1ec;text-align:left}
+  .pauseCard{text-align:left}.pauseCard h2{font-size:38px;margin:0 0 16px}.pauseBtns{display:grid;gap:9px}
+  .materialLegend{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.legendItem{font-size:11px;color:#b9c5d3;background:#111824;border:1px solid #29364a;border-radius:999px;padding:5px 8px}
+  @media(max-width:680px){.menuBtns{grid-template-columns:1fr}.menuCard{min-height:auto}.objectiveHud{max-width:62vw}.hudBox{padding:8px 9px}.roundBtn{width:45px;height:45px}.fireBtn{min-width:98px;height:52px}.aimTip{bottom:78px}.contentCard{height:100%;width:100%;border-radius:0;border-left:0;border-right:0}.resultBtns{grid-template-columns:1fr}.resultBtns .primary{grid-column:auto}}
+  @media(orientation:portrait) and (max-width:700px){#game canvas{width:100%;height:auto}.gameFrame{align-items:center}.hudTop{padding-top:2px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <section id="menu" class="screen menuScreen active">
+    <div class="menuCard">
+      <div class="tagline">● ONE SHOT. ONE SOLUTION.</div>
+      <h1 class="title">ONE <span>BULLET</span></h1>
+      <div class="subtitle">Study the room. Find the chain. Make it count.</div>
+      <div class="menuStats"><div class="chip">⭐ <b id="menuStars">0</b> stars</div><div class="chip">🎯 <b id="menuPerfect">0</b> perfect shots</div><div class="chip">🏆 <b id="menuAch">0</b> achievements</div></div>
+      <div class="menuBtns">
+        <button class="btn primary" id="playBtn">PLAY</button>
+        <button class="btn" data-screen="levels">LEVEL SELECT</button>
+        <button class="btn" id="dailyBtn">SHOT OF THE DAY</button>
+        <button class="btn" data-screen="achievements">ACHIEVEMENTS</button>
+        <button class="btn" data-screen="howto">HOW TO PLAY</button>
+        <button class="btn" data-screen="settings">SETTINGS</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="levels" class="screen menuScreen"><div class="contentCard"><div class="topRow"><div><h2 class="sectionTitle">LEVEL SELECT</h2><div class="sectionText">Complete levels to unlock the next. Later chapters open with a modest star requirement.</div></div><button class="btn backBtn" data-screen="menu">BACK</button></div><div id="levelSelectBody"></div></div></section>
+  <section id="achievements" class="screen menuScreen"><div class="contentCard"><div class="topRow"><div><h2 class="sectionTitle">ACHIEVEMENTS</h2><div class="sectionText">Small trophies for elegant, strange, and spectacular solutions.</div></div><button class="btn backBtn" data-screen="menu">BACK</button></div><div id="achievementGrid" class="achievementGrid" style="margin-top:22px"></div></div></section>
+  <section id="howto" class="screen menuScreen"><div class="contentCard"><div class="topRow"><div><h2 class="sectionTitle">HOW TO PLAY</h2><div class="sectionText">You have unlimited time to think, but only one bullet after you commit.</div></div><button class="btn backBtn" data-screen="menu">BACK</but
