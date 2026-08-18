@@ -1,0 +1,105 @@
+// v1.7.2 time display + reward balance hotfix
+const V172='1.7.2';
+const sub172=document.querySelector('#menu .sub');if(sub172)sub172.innerHTML=sub172.innerHTML.replace(/v\d+\.\d+(?:\.\d+)?/,'v1.7.2');
+const choiceOverlay172=$('#choiceOverlay');if(choiceOverlay172)choiceOverlay172.style.zIndex='20';
+
+// Never rely on addTime() returning a number. Measure the timer before/after instead.
+function grantTime172(seconds){
+  const requested=Math.max(0,Number(seconds)||0);
+  const before=Number(game?.time)||0;
+  addTime(requested);
+  const after=Number(game?.time);
+  const gained=Number.isFinite(after)?Math.max(0,after-before):0;
+  return Number.isFinite(gained)?gained:0;
+}
+function secs172(n){return Math.max(0,Math.round(Number(n)||0))}
+
+// TIME-room/hourglass display: preserve +10/+15 rewards, but always show a valid number.
+const _collectPickup172=collectPickup;
+collectPickup=function(x){
+  if(x&&!x.dead&&x.type==='hourglass'){
+    x.dead=true;
+    const bonus=Number.isFinite(Number(x.bonus))?Number(x.bonus):10;
+    const gained=grantTime172(bonus);
+    game.score+=120;
+    toast(`TIME BONUS! +${secs172(gained)} SEC`);
+    return;
+  }
+  return _collectPickup172(x);
+};
+
+// Rebuild combat time rewards with safe numeric displays.
+killEnemy=function(e){
+  if(!e||e.dead)return;
+  const wasBoss=!!e.boss,wasElite=!!e.elite,roomType=game.roomType;
+  _killEnemyV17(e);
+  if(e.combatRewarded)return;
+  e.combatRewarded=true;
+
+  if(wasBoss){
+    const gained=grantTime172(7); // original boss kill already grants +5 sec: total target = +12.
+    combatText(e,`BOSS BONUS +${secs172(gained)}s`,'#ffe27a');
+    battleBoon(2);
+    if(rng()<.28){giveWeapon(true);toast('BOSS WEAPON DROP!')}
+    return;
+  }
+
+  let bonus=0;
+  if(wasElite)bonus=rng()<.35?2:1;
+  else if(rng()<.30)bonus=1;
+  if(bonus){
+    const gained=grantTime172(bonus);
+    combatText(e,`+${secs172(gained)}s`,'#8fe8ff');
+  }
+
+  const boonChance=wasElite?.12:.05;
+  if(rng()<boonChance)battleBoon(1);
+  const weaponChance=wasElite?.07:.02;
+  if(rng()<weaponChance){giveWeapon(false);toast(wasElite?'ELITE WEAPON DROP!':'LUCKY WEAPON DROP!')}
+
+  if(game.roomCleared&&(roomType==='combat'||roomType==='challenge')){
+    const clearBonus=roomType==='challenge'?2:1;
+    const gained=grantTime172(clearBonus);
+    toast(`${roomType==='challenge'?'SKULL ROOM':'BATTLE'} CLEARED! +${secs172(gained)} SEC`);
+  }
+};
+
+// Mystery/treasure time choices: +3 sec is not competitive with a major stat boost.
+// Make clock-style three-option rewards a meaningful +15 sec, while prisoner rescue stays +5 sec.
+const _openRoomChoice172=openRoomChoice;
+openRoomChoice=function(type){
+  _openRoomChoice172(type);
+  const wrap=$('#choiceButtons'),text=$('#choiceText');
+  if(!wrap)return;
+  const buttons=[...wrap.querySelectorAll('button')];
+  const txt=(text?.textContent||'').toLowerCase();
+
+  if(type==='mystery'&&txt.includes('prisoner')){
+    if(text)text.textContent='A prisoner rattles the bars: “Five seconds can change everything in here.”';
+    const b=buttons.find(x=>/RESCUE/i.test(x.textContent))||buttons[0];
+    if(b){
+      b.textContent='RESCUE — +5 SEC';
+      b.onclick=()=>{
+        const gained=grantTime172(5);
+        $('#choiceOverlay').classList.remove('active');game.paused=false;
+        toast(`PRISONER RESCUED! +${secs172(gained)} SEC`);
+      };
+    }
+  }
+
+  for(const b of buttons){
+    const label=(b.textContent||'').toUpperCase();
+    const isClock=label.includes('CLOCK')||label.includes('TIME BLESSING');
+    const isTinyTime=/\+\s*3\s*SEC/.test(label)&&!label.includes('RESCUE');
+    if(isClock||isTinyTime){
+      b.textContent='CLOCK — +15 SEC';
+      b.onclick=()=>{
+        const gained=grantTime172(15);
+        $('#choiceOverlay').classList.remove('active');game.paused=false;
+        toast(`CLOCK BLESSING! +${secs172(gained)} SEC`);
+      };
+    }
+  }
+};
+
+if(location.hash.includes('debugv172'))window.__dungeon172={grantTime172,secs172,get game(){return game},openRoomChoice,collectPickup,killEnemy};
