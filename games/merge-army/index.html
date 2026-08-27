@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <meta name="theme-color" content="#171420">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Merge Army</title>
+  <style>
+    :root{--ink:#171420;--ink2:#242033;--panel:#302a3c;--line:#5c506f;--paper:#f6e7c7;--gold:#f3c64f;--orange:#ef7b45;--green:#68c884;--red:#e35858;--blue:#68aee8;--muted:#bfb4cd;--white:#fffaf0}
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--white);font-family:Inter,ui-rounded,"Arial Rounded MT Bold",Arial,sans-serif}
+    button{font:inherit;color:inherit}
+    button:focus-visible,.slot:focus-visible{outline:3px solid #fff;outline-offset:2px}
+    .hidden{display:none!important}
+    .screen{position:absolute;inset:0;overflow:auto}
+    #menu{background:#171420;min-height:100%;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
+    .menu-wrap{width:min(1020px,100%);margin:auto;display:grid;grid-template-columns:minmax(290px,.95fr) minmax(360px,1.25fr);gap:28px;align-items:stretch;min-height:calc(100vh - 40px)}
+    .brand-panel{position:relative;overflow:hidden;background:#242033;border:2px solid #4c425c;border-radius:28px;padding:clamp(24px,5vw,55px);display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 16px 0 #100e17}
+    .brand-panel:before{content:"⚔";position:absolute;right:-24px;top:-30px;font-size:190px;line-height:1;color:#302a3c;transform:rotate(-16deg)}
+    .eyebrow{color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.22em;text-transform:uppercase}
+    h1{position:relative;font-size:clamp(54px,9vw,104px);line-height:.82;letter-spacing:-.075em;margin:26px 0 18px;text-transform:uppercase;text-shadow:5px 6px 0 #0c0b10}
+    .tagline{position:relative;color:#ddd4e7;font-weight:800;font-size:clamp(17px,2.4vw,24px);margin:0;max-width:430px}
+    .mini-scene{position:relative;margin-top:36px;height:116px;border-bottom:5px solid #66577b;display:flex;align-items:flex-end;gap:8px;padding:0 9px 12px;font-size:42px}
+    .mini-scene .castle{font-size:72px;margin-right:auto}
+    .mini-scene .enemy{transform:scaleX(-1)}
+    .menu-panel{display:flex;flex-direction:column;justify-content:center;background:#f6e7c7;color:#261f2e;border-radius:28px;padding:clamp(20px,4vw,42px);box-shadow:0 16px 0 #0f0d15;border:2px solid #fff1d2}
+    .profile-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+    .record-badges{display:flex;gap:9px;flex-wrap:wrap}
+    .record-badge{background:#e5d0a8;border:2px solid #bc9d65;border-radius:14px;padding:8px 11px;font-weight:900;font-size:13px}
+    .primary-btn,.menu-btn,.icon-btn,.action-btn,.choice-btn{border:0;cursor:pointer;font-weight:900;transition:transform .12s ease,filter .12s ease}
+    .primary-btn:active,.menu-btn:active,.icon-btn:active,.action-btn:active,.choice-btn:active{transform:translateY(2px)}
+    .primary-btn{width:100%;background:#e95f48;color:#fff;border-radius:18px;padding:20px 22px;font-size:25px;text-transform:uppercase;letter-spacing:.04em;box-shadow:0 6px 0 #9f392b;margin-bottom:18px}
+    .primary-btn:hover{filter:brightness(1.08)}
+    .mode-row{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:12px}
+    .menu-btn{min-height:74px;text-align:left;background:#fff9e9;color:#2d2535;border:2px solid #c9ad79;border-radius:16px;padding:13px 14px;box-shadow:0 4px 0 #b69867}
+    .menu-btn span{display:block;font-size:12px;color:#756480;margin-top:3px;font-weight:700}
+    .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:5px}
+    .menu-grid .menu-btn{min-height:65px;text-align:center;font-size:13px;padding:10px 7px}
+    .version-note{text-align:center;color:#8b765e;font-size:11px;font-weight:800;margin:18px 0 0}
+
+    #game{background:#171420;overflow:hidden;touch-action:none;user-select:none}
+    .game-layout{height:100%;display:grid;grid-template-rows:auto minmax(190px,1.22fr) minmax(260px,.95fr);gap:9px;padding:max(8px,env(safe-area-inset-top)) max(9px,env(safe-area-inset-right)) max(9px,env(safe-area-inset-bottom)) max(9px,env(safe-area-inset-left));max-width:1280px;margin:auto}
+    .hud{display:grid;grid-template-columns:auto auto 1fr auto;gap:8px;align-items:center;background:#2b2537;border:2px solid #4d4260;border-radius:15px;padding:7px 9px;min-height:56px}
+    .game-logo{font-size:17px;font-weight:1000;letter-spacing:-.04em;padding:0 7px;color:var(--gold)}
+    .hud-stat{background:#1c1825;border:1px solid #544962;border-radius:11px;padding:6px 10px;min-width:78px}
+    .hud-label{display:block;color:#a99db6;font-size:9px;letter-spacing:.14em;font-weight:900;text-transform:uppercase}
+    .hud-value{font-weight:1000;font-size:16px;white-space:nowrap}
+    .hp-wrap{min-width:160px}
+    .bar{height:11px;background:#17131d;border:1px solid #675b71;border-radius:99px;overflow:hidden;margin-top:3px}
+    .bar-fill{height:100%;background:#68c884;width:100%;transition:width .18s linear}
+    .icon-btn{width:42px;height:42px;border-radius:12px;background:#40374f;border:1px solid #675a79;font-size:20px}
+    .battle-wrap{position:relative;border:2px solid #5b4c68;background:#332d3f;border-radius:18px;overflow:hidden;min-height:0}
+    #battle{display:block;width:100%;height:100%}
+    .battle-top{position:absolute;left:9px;right:9px;top:8px;display:flex;align-items:flex-start;justify-content:space-between;pointer-events:none;gap:8px}
+    .wave-pill,.threat-pill{background:#191520e8;border:1px solid #665a73;border-radius:12px;padding:7px 10px;box-shadow:0 3px 0 #0f0d13}
+    .wave-pill{font-size:15px;font-weight:1000}
+    .threat-pill{text-align:right;font-size:11px;color:#d7cbe1;max-width:240px}
+    .threat-pill strong{display:block;color:#f2c851;font-size:12px}
+    .bossbar{position:absolute;left:18%;right:18%;bottom:9px;background:#1d1721;border:2px solid #7b4961;border-radius:12px;padding:5px 8px;text-align:center;font-size:10px;font-weight:900}
+    .bossbar .bar{height:8px;margin-top:3px}.bossbar .bar-fill{background:#dc586a}
+    .board-section{min-height:0;background:#2c2637;border:2px solid #4f4560;border-radius:18px;padding:8px;display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:10px}
+    .board-main{min-width:0;min-height:0;display:flex;flex-direction:column}
+    .board-head{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;color:#a89bb6;font-size:9px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;text-align:center;margin-bottom:5px}
+    .army-board{flex:1;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(3,minmax(58px,1fr));gap:6px;min-height:0}
+    .slot{position:relative;min-height:58px;border:2px dashed #655875;background:#211d2b;border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden}
+    .slot:before{content:attr(data-key);position:absolute;left:6px;top:4px;color:#716681;font-size:9px;font-weight:900}
+    .slot.front{background:#2b222b;border-color:#785565}.slot.mid{background:#252233}.slot.back{background:#202633;border-color:#4b6276}
+    .slot.selected{border-style:solid;border-color:#f4ca54;box-shadow:inset 0 0 0 2px #f4ca54}
+    .slot.valid{border-color:#69d18a;background:#1f3a2c}.slot.invalid{border-color:#d75d64}.slot.drag-source{opacity:.42}
+    .unit-card{width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:clamp(2px,1vw,9px);padding:4px}
+    .unit-icon{font-size:clamp(25px,4vh,39px);filter:drop-shadow(0 3px 0 #0e0c12)}
+    .unit-info{min-width:0}.unit-name{font-size:clamp(9px,1.3vw,13px);font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:94px}.unit-level{font-size:10px;color:#f4cb55;font-weight:900;letter-spacing:-.06em}.unit-hp{height:4px;background:#16121c;border-radius:9px;overflow:hidden;margin-top:3px;width:60px;max-width:100%}.unit-hp i{display:block;height:100%;background:#69ca87}
+    .slot.new .unit-card{animation:pop .34s ease-out}.slot.merged{animation:mergePulse .48s ease-out}
+    @keyframes pop{0%{transform:scale(.35);opacity:.3}72%{transform:scale(1.14)}100%{transform:scale(1);opacity:1}}
+    @keyframes mergePulse{0%{box-shadow:inset 0 0 0 0 #fff}45%{box-shadow:inset 0 0 0 8px #f7d45f;transform:scale(1.04)}100%{box-shadow:inset 0 0 0 0 #fff;transform:scale(1)}}
+    .side-actions{display:flex;flex-direction:column;gap:7px;min-height:0}
+    .recruit-box{background:#1d1925;border:1px solid #544962;border-radius:13px;padding:8px}
+    .recruit-line{display:flex;justify-content:space-between;color:#c3b8ce;font-size:10px;font-weight:900;margin-bottom:4px}.recruit-line strong{color:#fff}
+    .recruit-fill{background:#61aee8}
+    .action-btn{border-radius:12px;background:#4b4059;border:1px solid #716381;padding:10px 8px;font-size:12px;min-height:42px;box-shadow:0 3px 0 #17131d}
+    .action-btn.primary{background:#d25b48;border-color:#ed836f}.action-btn.ability{background:#3f6592;border-color:#6aa9e2}.action-btn.ready{background:#e2a83f;color:#241c28;animation:readyPulse 1s infinite}.action-btn.danger{background:#49313d;border-color:#865267}.action-btn:disabled{opacity:.45;filter:saturate(.4);cursor:not-allowed}
+    @keyframes readyPulse{50%{box-shadow:0 0 0 4px #e9c25c55}}
+    .tip{margin-top:auto;color:#a99db5;font-size:10px;line-height:1.35;text-align:center;padding:2px}
+
+    .toast-stack{position:absolute;left:50%;top:18%;transform:translateX(-50%);z-index:20;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:6px}
+    .toast{background:#fff3cf;color:#2b2031;border:2px solid #f0c04c;border-radius:13px;padding:9px 14px;font-weight:1000;box-shadow:0 5px 0 #6f4c2c;animation:toastLife 1.45s forwards;white-space:nowrap}
+    .toast.big{font-size:22px;text-transform:uppercase}.toast.bad{background:#5a2534;color:#fff;border-color:#d65c65}
+    @keyframes toastLife{0%{opacity:0;transform:translateY(14px) scale(.75)}15%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0;transform:translateY(-18px)}}
+    .drag-ghost{position:fixed;z-index:50;pointer-events:none;font-size:44px;transform:translate(-50%,-50%);filter:drop-shadow(0 6px 2px #0008)}
+    .modal-backdrop{position:absolute;inset:0;z-index:100;background:#0c0a10dd;display:flex;align-items:center;justify-content:center;padding:18px;overflow:auto}
+    .modal{width:min(680px,100%);max-height:92vh;overflow:auto;background:#f6e7c7;color:#271f2f;border:3px solid #fff0cb;border-radius:24px;box-shadow:0 12px 0 #0e0b12;padding:clamp(18px,4vw,32px)}
+    .modal.dark{background:#2b2537;color:#fff;border-color:#594d68}
+    .modal h2{font-size:clamp(28px,6vw,48px);letter-spacing:-.045em;margin:0 0 7px;text-transform:uppercase}.modal h3{margin:17px 0 8px}.modal p{line-height:1.48}.modal-sub{color:#78687e;font-weight:700;margin-top:0}.modal.dark .modal-sub{color:#b7aabe}
+    .choice-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+    .choice-btn{background:#fff9e9;color:#2d2434;border:2px solid #c4a66d;border-radius:16px;padding:16px 12px;min-height:135px;text-align:left;box-shadow:0 5px 0 #ac8e5e}.choice-btn:hover{transform:translateY(-2px)}.choice-icon{display:block;font-size:28px;margin-bottom:7px}.choice-btn b{display:block;text-transform:uppercase;font-size:14px}.choice-btn small{display:block;color:#75667c;margin-top:7px;line-height:1.35;font-weight:700}
+    .modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.modal-actions button{flex:1;min-width:120px}
+    .plain-btn{border:2px solid #8d7352;background:#e5d0a8;color:#2e2535;border-radius:13px;padding:12px 15px;font-weight:900;cursor:pointer}.plain-btn.danger{background:#a04444;color:#fff;border-color:#c76565}
+    .list{display:grid;gap:8px;margin:14px 0}.list-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:#e9d6af;border:1px solid #c3a573;border-radius:13px;padding:11px 13px;font-weight:800}.modal.dark .list-row{background:#211c2a;border-color:#51465f}.switch{border:0;border-radius:99px;background:#8d7f91;color:#fff;padding:7px 11px;min-width:70px;font-weight:900;cursor:pointer}.switch.on{background:#4ca66c}
+    .tutorial-hand{font-size:42px}.kbd{display:inline-block;background:#e2cda5;border:1px solid #a88d61;border-bottom-width:3px;border-radius:7px;padding:2px 7px;font-weight:900}
+    .end-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.end-stat{background:#e7d2aa;border-radius:13px;padding:12px 7px;text-align:center}.end-stat b{display:block;font-size:22px}.end-stat span{font-size:10px;font-weight:900;color:#756278;text-transform:uppercase}
+    .achievement{opacity:.5}.achievement.unlocked{opacity:1;border-color:#d5a739}.mode-card{display:flex;gap:12px;align-items:center}.mode-icon{font-size:28px}
+
+    @media(max-width:760px){
+      .menu-wrap{grid-template-columns:1fr;min-height:auto}.brand-panel{min-height:310px}.menu-panel{margin-bottom:12px}.mini-scene{height:82px;font-size:30px}.mini-scene .castle{font-size:55px}
+      .game-layout{grid-template-rows:auto minmax(178px,.9fr) minmax(315px,1.25fr);gap:6px;padding:5px}.hud{grid-template-columns:auto auto 1fr auto;padding:5px}.game-logo{display:none}.hud-stat{padding:5px 7px;min-width:60px}.hud-value{font-size:13px}.hp-wrap{min-width:98px}.board-section{grid-template-columns:1fr;padding:6px;gap:6px}.side-actions{display:grid;grid-template-columns:1.25fr repeat(3,1fr);gap:5px}.recruit-box{padding:6px}.action-btn{min-height:43px;padding:6px;font-size:10px}.tip{display:none}.army-board{grid-template-rows:repeat(3,minmax(64px,1fr))}.unit-card{flex-direction:column;gap:0}.unit-icon{font-size:27px;line-height:28px}.unit-name{font-size:9px;max-width:70px}.unit-hp{width:47px}.threat-pill{max-width:180px}.choice-grid{grid-template-columns:1fr}.choice-btn{min-height:auto}.modal{max-height:95vh}.menu-grid{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:430px){.mode-row{grid-template-columns:1fr}.menu-panel{padding:18px}.brand-panel{padding:28px}.profile-strip{align-items:flex-start}.record-badge{padding:6px 8px}.game-layout{grid-template-rows:auto minmax(165px,.8fr) minmax(340px,1.25fr)}.board-head{font-size:8px}.slot{border-radius:10px}.unit-name{display:none}.unit-icon{font-size:29px}.hud-label{font-size:8px}.threat-pill{font-size:9px;max-width:150px}}
+    @media(orientation:landscape) and (max-height:560px){.game-layout{grid-template-columns:minmax(360px,1.2fr) minmax(350px,1fr);grid-template-rows:auto 1fr}.hud{grid-column:1/3}.battle-wrap{grid-column:1}.board-section{grid-column:2;grid-template-columns:1fr 120px}.side-actions{display:flex}.army-board{grid-template-rows:repeat(3,minmax(49px,1fr))}.slot{min-height:49px}.unit-icon{font-size:25px}.unit-name{font-size:8px}.action-btn{padding:5px;min-height:35px}.recruit-box{padding:5px}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+  <section id="menu" class="screen">
+    <div class="menu-wrap">
+      <div class="brand-panel">
+        <div>
+          <div class="eyebrow">Tiny soldiers. Huge decisions.</div>
+          <h1>Merge<br>Army</h1>
+          <p class="tagline">Recruit. Position. Merge. Hold the line.</p>
+        </div>
+        <div class="mini-scene" aria-hidden="true"><span class="castle">🏰</span><span>🏹</span><span>🛡️</span><span>🧙</span><span class="enemy">👹</span></div>
+      </div>
+      <div class="menu-panel">
+        <div class="profile-strip"><div class="eyebrow" style="color:#7c5872">Commander’s Keep</div><div class="record-badges"><div class="record-badge">🏆 Wave <span id="bestWave">0</span></div><div class="record-badge">🎖 <span id="medals">0</span></div></div></div>
+        <button class="primary-btn" id="playBtn">⚔ Play Campaign</button>
+        <div class="mode-row">
+          <button class="menu-btn" data-mode="endless">♾️ Endless Siege<span>Survive as long as you can</span></button>
+          <button class="menu-btn" data-mode="daily">☀️ Daily Battle<span id="dailyLabel">Today’s special rules</span></button>
+        </div>
+        <div class="menu-grid">
+          <button class="menu-btn" data-panel="commanders">👑<span>Commanders</span></button>
+          <button class="menu-btn" data-panel="army">🛡️<span>Army</span></button>
+          <button class="menu-btn" data-panel="upgrades">⬆️<span>Upgrades</span></button>
+          <button class="menu-btn" data-panel="achievements">🏅<span>Achievements</span></button>
+          <button class="menu-btn" data-panel="how">📜<span>How to Play</span></button>
+          <button class="menu-btn" data-panel="settings">⚙️<span>Settings</span></button>
+        </div>
+        <p class="version-note">Progress saves automatically on this device</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="game" class="screen hidden" aria-label="Merge Army game">
+    <div class="game-layout">
+      <header class="hud">
+        <div class="game-logo">MERGE ARMY</div>
+        <div class="hud-stat"><span class="hud-label">Wave</span><span class="hud-value" id="waveValue">1</span></div>
+        <div class="hud-stat hp-wrap"><span class="hud-label">Castle <span id="hpText">100 / 100</span></span><div class="bar"><div class="bar-fill" id="hpFill"></div></div></div>
+        <div style="display:flex;gap:6px"><div class="hud-stat"><span class="hud-label">Score</span><span class="hud-value" id="scoreValue">0</span></div><div class="hud-stat"><span class="hud-label">Gold</span><span class="hud-value" id="goldValue">0</span></div><button class="icon-btn" id="pauseBtn" aria-label="Pause">Ⅱ</button></div>
+      </header>
+      <div class="battle-wrap">
+        <canvas id="battle" aria-label="Three-lane battlefield"></canvas>
+        <div class="battle-top"><div class="wave-pill" id="modePill">GREENWOOD</div><div class="threat-pill"><strong id="threatTitle">NEXT WAVE</strong><span id="threatText">Goblins approaching</span></div></div>
+        <div class="bossbar hidden" id="bossBar"><span id="bossName">OGRE KING</span><div class="bar"><div class="bar-fill" id="bossFill"></div></div></div>
+      </div>
+      <section class="board-section">
+        <div class="board-main">
+          <div class="board-head"><span>Front</span><span>Mid</span><span>Mid</span><span>Back</span></div>
+          <div class="army-board" id="armyBoard" aria-label="Army board"></div>
+        </div>
+        <aside class="side-actions">
+          <div class="recruit-box"><div class="recruit-line"><span>Next recruit</span><strong id="recruitTime">4.0s</strong></div><div class="bar"><div class="bar-fill recruit-fill" id="recruitFill"></div></div></div>
+          <button class="action-btn primary" id="recruitBtn">➕ Recruit <span id="recruitCost">25G</span></button>
+          <button class="action-btn ability" id="abilityBtn">⚡ <span id="abilityName">Rally</span> <span id="chargeText">0%</span></button>
+          <button class="action-btn danger" id="dismissBtn" disabled>Dismiss +<span id="sellValue">0</span>G</button>
+          <div class="tip" id="tipText">Drag matching soldiers together—or tap one, then another.</div>
+        </aside>
+      </section>
+    </div>
+    <div class="toast-stack" id="toasts" aria-live="polite"></div>
+  </section>
+  <div id="modalRoot"></div>
+
+  <script>
+  (()=>{
+    'use strict';
+    const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+    const SAVE_KEY='mergeArmySaveV1';
+    const DEFAULT_SAVE={
+      medals:0,totalRuns:0,totalMerges:0,totalKills:0,tutorialDone:false,
+      records:{wave:0,score:0,time:0,level:1,combo:0,kills:0,bosses:0},
+      achievements:{},unlockedUnits:['archer','knight','mage'],activeUnits:['archer','knight','mage'],
+      unlockedCommanders:['captain'],commander:'captain',
+      upgrades:{recruitment:0,fortification:0,training:0,logistics:0,command:0},
+      settings:{sound:true,music:false,control:'both',reduced:false,shake:true},daily:{}
+    };
+    const clone=o=>JSON.parse(JSON.stringify(o));
+    function loadSave(){
+      try{
+        const raw=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');
+        if(!raw||typeof raw!=='object')return clone(DEFAULT_SAVE);
+        return {...clone(DEFAULT_SAVE),...raw,records:{...DEFAULT_SAVE.records,...raw.records},achievements:{...raw.achievements},upgrades:{...DEFAULT_SAVE.upgrades,...raw.upgrades},settings:{...DEFAULT_SAVE.settings,...raw.settings},daily:{...raw.daily}};
+      }catch(e){return clone(DEFAULT_SAVE)}
+    }
+    let save=loadSave();
+    const persist=()=>{try{localStorage.setItem(SAVE_KEY,JSON.stringify(save))}catch(e){}};
+    const UNIT={
+      archer:{name:'Archer',icon:'🏹',role:'Ranged',hp:44,dmg:10,rate:.82,range:860,color:'#75b4e4'},
+      knight:{name:'Knight',icon:'🛡️',role:'Tank',hp:150,dmg:12,rate:.72,range:78,color:'#d6b66a'},
+      mage:{name:'Mage',icon:'🧙',role:'Splash',hp:52,dmg:19,rate:.48,range:820,splash:85,color:'#a67be0'},
+      spearman:{name:'Spearman',icon:'🔱',role:'Anti-armour',hp:82,dmg:17,rate:.68,range:150,color:'#75c99a',unlock:8},
+      healer:{name:'Healer',icon:'✨',role:'Support',hp:58,dmg:0,rate:.58,range:900,heal:8,color:'#f0a9cf',unlock:4},
+      bomber:{name:'Bomber',icon:'💣',role:'Big splash',hp:61,dmg:27,rate:.36,range:790,splash:125,color:'#ee865c',unlock:14},
+      frost:{name:'Frost Mage',icon:'❄️',role:'Slow',hp:55,dmg:13,rate:.56,range:760,slow:2.2,color:'#70d3e9',unlock:22}
+    };
+    const ENEMY={
+      goblin:{name:'Goblin',icon:'👺',hp:28,speed:29,dmg:8,rate:.75,gold:3},
+      wolf:{name:'Wolf Pack',icon:'🐺',hp:22,speed:48,dmg:7,rate:.9,gold:3},
+      skeleton:{name:'Skeletons',icon:'💀',hp:42,speed:26,dmg:10,rate:.7,gold:4},
+      orc:{name:'Armoured Orcs',icon:'👹',hp:82,speed:18,dmg:16,rate:.58,gold:6,armour:true},
+      shield:{name:'Shield Guard',icon:'🛡️',hp:105,speed:16,dmg:13,rate:.65,gold:7,armour:true},
+      troll:{name:'Trolls',icon:'🧌',hp:150,speed:14,dmg:22,rate:.48,gold:9,regen:2.2},
+      ghost:{name:'Ghosts',icon:'👻',hp:68,speed:34,dmg:14,rate:.62,gold:7,ghost:true},
+      demon:{name:'Flying Demons',icon:'🦇',hp:66,speed:32,dmg:13,rate:.66,gold:8,flying:true},
+      siege:{name:'Siege Golem',icon:'🗿',hp:235,speed:11,dmg:40,rate:.34,gold:14,armour:true}
+    };
+    const BOSSES=[
+      {name:'OGRE KING',icon:'👑',base:'troll',hp:640,dmg:30,speed:12},
+      {name:'NECROMANCER QUEEN',icon:'🧙‍♀️',base:'skeleton',hp:760,dmg:22,speed:15,summon:true},
+      {name:'SIEGE GIANT',icon:'🦣',base:'siege',hp:980,dmg:52,speed:9}
+    ];
+    const LEVEL_NAMES=['Recruit','Veteran','Elite','Master','Legendary'];
+    const LEVEL_POWER=[1,2.25,5,10.8,23];
+    const COMMANDERS={
+      captain:{name:'Captain',icon:'⚔️',desc:'+5% all damage · Rally heals the castle',ability:'Rally',need:0},
+      ranger:{name:'Ranger',icon:'🏹',desc:'+15% ranged speed · Arrow Storm hits every enemy',ability:'Arrow Storm',need:12},
+      archmage:{name:'Archmage',icon:'🔮',desc:'+18% magic damage · Meteor devastates one lane',ability:'Meteor',need:25}
+    };
+    const ACHIEVEMENTS={
+      firstMerge:['FIRST MERGE','Create a Veteran unit'],veteran:['VETERAN','Create an Elite unit'],legendary:['LEGENDARY','Create a Level 5 unit'],
+      combo4:['CHAIN REACTION','Reach a ×4 merge combo'],wave5:['HOLD THE LINE','Reach Wave 5'],boss:['GIANT KILLER','Defeat your first boss'],
+      full:['FULL HOUSE','Fill every army slot'],century:['GENERAL','Defeat 100 enemies lifetime']
+    };
+    const UPGRADES=[
+      {id:'sharp',icon:'🏹',name:'Sharp Arrows',desc:'Archers deal +28% damage',apply:g=>g.mods.archerDmg+=.28},
+      {id:'iron',icon:'🛡️',name:'Iron Wall',desc:'Knights gain +35% max health',apply:g=>{g.mods.knightHp+=.35;g.board.forEach(u=>{if(u&&u.type==='knight'){u.maxHp*=1.35;u.hp+=u.maxHp*.35}})}},
+      {id:'arcane',icon:'🔮',name:'Arcane Echo',desc:'Mages have a 24% chance to strike twice',apply:g=>g.mods.echo+=.24},
+      {id:'rapid',icon:'💨',name:'Rapid Volley',desc:'All ranged units attack 18% faster',apply:g=>g.mods.rangedRate+=.18},
+      {id:'blast',icon:'💥',name:'Larger Blasts',desc:'Splash radius +35%',apply:g=>g.mods.splash+=.35},
+      {id:'recruit',icon:'⏱️',name:'Fast Recruiting',desc:'New recruits arrive 16% faster',apply:g=>g.mods.recruit+=.16},
+      {id:'walls',icon:'🏰',name:'Castle Walls',desc:'+30 maximum HP and repair 30',apply:g=>{g.maxHp+=30;g.hp=Math.min(g.maxHp,g.hp+30)}},
+      {id:'repair',icon:'🧱',name:'Emergency Repair',desc:'Restore 45 castle HP',apply:g=>g.hp=Math.min(g.maxHp,g.hp+45)},
+      {id:'merge',icon:'✨',name:'Merge Power',desc:'Merged units gain a 6-second attack frenzy',apply:g=>g.mods.mergeFrenzy=true},
+      {id:'gold',icon:'🪙',name:'Bounty Hunter',desc:'Enemies drop 40% more gold',apply:g=>g.mods.gold+=.4},
+      {id:'spear',icon:'🔱',name:'Piercing Steel',desc:'Anti-armour damage +45%',apply:g=>g.mods.armourDmg+=.45},
+      {id:'frost',icon:'❄️',name:'Deep Freeze',desc:'Slow effects last 45% longer',apply:g=>g.mods.slow+=.45},
+      {id:'heal',icon:'💗',name:'Field Medicine',desc:'Healer power +45%',apply:g=>g.mods.heal+=.45},
+      {id:'tower',icon:'🎯',name:'Castle Ballista',desc:'The castle fires a heavy bolt every 4 seconds',apply:g=>g.mods.ballista=true},
+      {id:'fury',icon:'🔥',name:'Battle Fury',desc:'All damage +12%',apply:g=>g.mods.allDmg+=.12},
+      {id:'golden',icon:'🎖️',name:'War Chest',desc:'Gain 65 gold immediately',apply:g=>g.gold+=65},
+      {id:'vital',icon:'❤️',name:'Vitality',desc:'All soldiers gain 20% max health',apply:g=>{g.mods.allHp+=.2;g.board.forEach(u=>{if(u){u.maxHp*=1.2;u.hp+=u.maxHp/6}})}},
+      {id:'charge',icon:'⚡',name:'Battle Rhythm',desc:'Ability charges 30% faster',apply:g=>g.mods.charge+=.3},
+      {id:'storm',icon:'🌪️',name:'Storm Bolts',desc:'Projectiles deal +18% damage',apply:g=>g.mods.projectile+=.18},
+      {id:'last',icon:'🚩',name:'Last Stand',desc:'Deal +35% damage while castle is below 35 HP',apply:g=>g.mods.lastStand=true}
+    ];
+    let G=null, raf=0, last=0, renderTick=0, audioCtx=null, drag=null, musicTimer=null;
+    const els={menu:$('#menu'),game:$('#game'),board:$('#armyBoard'),canvas:$('#battle'),ctx:$('#battle').getContext('2d'),modal:$('#modalRoot')};
+
+    function unlockProgress(){
+      Object.entries(UNIT).forEach(([id,u])=>{if((u.unlock||0)<=save.medals&&!save.unlockedUnits.includes(id))save.unlockedUnits.push(id)});
+      Object.entries(COMMANDERS).forEach(([id,c])=>{if(c.need<=save.medals&&!save.unlockedCommanders.includes(id))save.unlockedCommanders.push(id)});
+      save.activeUnits=save.activeUnits.filter(x=>save.unlockedUnits.includes(x));
+      while(save.activeUnits.length<Math.min(3,save.unlockedUnits.length)){const x=save.unlockedUnits.find(x=>!save.activeUnits.includes(x));if(!x)break;save.activeUnits.push(x)}
+      persist();
+    }
+    function updateMenu(){
+      unlockProgress();$('#bestWave').textContent=save.records.wave;$('#medals').textContent=save.medals;
+      const d=dailyChallenge();$('#dailyLabel').textContent=d.name;
+    }
+    function dailyChallenge(){
+      const key=new Date().toISOString().slice(0,10), n=[...key].reduce((a,c)=>a+c.charCodeAt(0),0)%4;
+      return [{name:'Recruit Rush',desc:'Recruits arrive 30% faster',recruit:.3},{name:'Stout Castle',desc:'Start with +50 castle HP',hp:50},{name:'Goblin Tide',desc:'More enemies, more gold',swarm:1.35,gold:.3},{name:'Merge Madness',desc:'Merges charge abilities twice as fast',merge:2}][n];
+    }
+    function openAudio(){if(!audioCtx)try{audioCtx=new (window.AudioContext||window.webkitAudioContext)()}catch(e){};if(audioCtx?.state==='suspended')audioCtx.resume()}
+    function tone(freq=440,dur=.07,type='sine',vol=.035){
+      if(!save.settings.sound)return;openAudio();if(!audioCtx)return;
+      const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type=type;o.frequency.setValueAtTime(freq,audioCtx.currentTime);g.gain.setValueAtTime(vol,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+dur);o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur)
+    }
+    function setMusic(active){clearInterval(musicTimer);musicTimer=null;if(!active||!save.settings.music)return;let step=0;musicTimer=setInterval(()=>{if(G&&!G.paused&&!G.over)tone([110,130.8,146.8,164.8][step++%4],.28,'triangle',.012)},520)}
+    function toast(text,big=false,bad=false){const d=document.createElement('div');d.className='toast'+(big?' big':'')+(bad?' bad':'');d.textContent=text;$('#toasts').appendChild(d);setTimeout(()=>d.remove(),1500)}
+    function unlockAchievement(id){if(save.achievements[id])return;save.achievements[id]=Date.now();persist();toast('🏅 '+ACHIEVEMENTS[id][0],true);tone(880,.22,'triangle',.05)}
+    function unitStats(type,level){const b=UNIT[type],p=LEVEL_POWER[level-1];let hp=b.hp*(1+(level-1)*.7)*(1+save.upgrades.fortification*.02);if(type==='knight')hp*=1+(G?.mods.knightHp||0);hp*=1+(G?.mods.allHp||0);return{maxHp:Math.round(hp),dmg:b.dmg*p,rate:b.rate,range:b.range}}
+    function makeUnit(type,level=1){const st=unitStats(type,level);return{id:crypto.randomUUID?.()||Math.random().toString(36).slice(2),type,level,hp:st.maxHp,maxHp:st.maxHp,cooldown:Math.random()*.5,buff:0}}
+    function resetGame(mode='campaign'){
+      closeModal();cancelAnimationFrame(raf);clearInterval(musicTimer);G={mode,wave:0,time:0,score:0,gold:35+save.upgrades.logistics*6,hp:100+save.upgrades.fortification*5,maxHp:100+save.upgrades.fortification*5,board:Array(12).fill(null),enemies:[],projectiles:[],particles:[],texts:[],spawnQueue:[],spawnClock:0,waveTimer:2.5,recruitTimer:3,recruitCost:25,ability:0,selected:null,paused:false,over:false,kills:0,bosses:0,merges:0,combo:0,comboTimer:0,highest:1,boardFullWarn:false,ballistaTimer:2.5,mods:{archerDmg:0,knightHp:0,echo:0,rangedRate:0,splash:0,recruit:0,mergeFrenzy:false,gold:0,armourDmg:0,slow:0,heal:0,ballista:false,allDmg:save.upgrades.training*.015,charge:save.upgrades.command*.03,projectile:0,lastStand:false,allHp:0},daily:mode==='daily'?dailyChallenge():{}};
+      if(G.daily.hp){G.maxHp+=G.daily.hp;G.hp+=G.daily.hp}if(G.daily.gold)G.mods.gold+=G.daily.gold;if(G.daily.recruit)G.mods.recruit+=G.daily.recruit;
+      G.board[0]=makeUnit('knight');G.board[3]=makeUnit('archer');G.board[7]=makeUnit('archer');G.board[11]=makeUnit('mage');
+      els.menu.classList.add('hidden');els.game.classList.remove('hidden');$('#modePill').textContent=mode==='campaign'?'GREENWOOD':mode==='endless'?'ENDLESS SIEGE':'DAILY · '+G.daily.name.toUpperCase();
+      selected(null);renderBoard();updateHUD();setMusic(true);last=performance.now();raf=requestAnimationFrame(loop);
+      if(!save.tutorialDone)setTimeout(showTutorial,160);else toast('HOLD THE LINE!',true)
+    }
+    function returnMenu(){cancelAnimationFrame(raf);clearInterval(musicTimer);G=null;closeModal();els.game.classList.add('hidden');els.menu.classList.remove('hidden');updateMenu()}
+    function showTutorial(){
+      if(!G)return;G.paused=true;openModal(`<div class="modal"><div class="tutorial-hand">☝️</div><h2>Merge to survive</h2><p class="modal-sub">Two Archers are waiting on your board.</p><div class="list"><div class="list-row"><span>1 · Match</span><b>Drag or tap identical soldiers</b></div><div class="list-row"><span>2 · Position</span><b>Tanks in front, ranged in back</b></div><div class="list-row"><span>3 · Defend</span><b>Your army attacks automatically</b></div></div><button class="primary-btn" id="tutorialGo">Start Battle</button></div>`);
+      $('#tutorialGo').onclick=()=>{save.tutorialDone=true;persist();closeModal();G.paused=false;toast('MERGE THE TWO ARCHERS!',true)}
+    }
+    function loop(now){if(!G)return;const dt=Math.min(.05,(now-last)/1000||0);last=now;if(!G.paused&&!G.over)update(dt);draw();renderTick+=dt;if(renderTick>.18){renderBoard();updateHUD();renderTick=0}raf=requestAnimationFrame(loop)}
+    function update(dt){
+      G.time+=dt;G.comboTimer-=dt;if(G.comboTimer<=0)G.combo=0;
+      const interval=Math.max(2.45,4.7-G.time*.0035-save.upgrades.recruitment*.08)*(1-G.mods.recruit);
+      G.recruitTimer-=dt;if(G.recruitTimer<=0){spawnRecruit();G.recruitTimer=interval}
+      G.waveTimer-=dt;if(G.waveTimer<=0){startWave();G.waveTimer=Math.max(13,20-G.wave*.22)}
+      processSpawns(dt);updateUnits(dt);updateEnemies(dt);updateProjectiles(dt);updateEffects(dt);
+      if(G.mods.ballista){G.ballistaTimer-=dt;if(G.ballistaTimer<=0){G.ballistaTimer=4;const t=G.enemies.filter(e=>!e.dead).sort((a,b)=>a.x-b.x)[0];if(t)launchProjectile({x:90,lane:t.lane},t,42*(1+G.wave*.03),'bolt',0,0)}}
+      G.enemies=G.enemies.filter(e=>!e.dead&&e.x>-20);G.projectiles=G.projectiles.filter(p=>!p.dead);G.particles=G.particles.filter(p=>p.life>0);G.texts=G.texts.filter(t=>t.life>0)
+    }
+    function startWave(){
+      G.wave++;if(G.mode==='campaign'&&G.wave>15)return;
+      const boss=G.wave%5===0, amount=Math.min(18,3+Math.floor(G.wave*1.25));let types=['goblin'];
+      if(G.wave>=2)types.push('wolf');if(G.wave>=3)types.push('skeleton');if(G.wave>=4)types.push('orc');if(G.wave>=6)types.push('shield');if(G.wave>=7)types.push('troll');if(G.wave>=8)types.push('ghost');if(G.wave>=9)types.push('demon');if(G.wave>=11)types.push('siege');
+      const count=Math.round(amount*(G.daily.swarm||1));G.spawnQueue=[];if(boss){const b=BOSSES[(G.wave/5-1)%BOSSES.length];G.spawnQueue.push({at:.5,boss:b,lane:Math.floor(Math.random()*3)});for(let i=0;i<Math.ceil(count*.42);i++)G.spawnQueue.push({at:1.4+i*.68,type:types[i%types.length],lane:i%3})}else for(let i=0;i<count;i++)G.spawnQueue.push({at:.35+i*Math.max(.34,.72-G.wave*.015),type:types[Math.floor(Math.random()*types.length)],lane:Math.floor(Math.random()*3)});
+      G.spawnClock=0;const preview=boss?`BOSS — ${G.spawnQueue[0].boss.name}`:`${count} ${ENEMY[G.spawnQueue[0].type].name}`;$('#threatText').textContent=preview;$('#threatTitle').textContent=boss?'⚠ BOSS INCOMING':'WAVE '+G.wave;toast(boss?'BOSS INCOMING!':'WAVE '+G.wave,boss);if(boss)tone(92,.55,'sawtooth',.055);if(G.wave===5)unlockAchievement('wave5')
+    }
+    function processSpawns(dt){G.spawnClock+=dt;while(G.spawnQueue.length&&G.spawnQueue[0].at<=G.spawnClock){const s=G.spawnQueue.shift();spawnEnemy(s)}}
+    function spawnEnemy(s){
+      if(s.boss){const b=s.boss,scale=1+G.wave*.11;const e={id:Math.random(),type:b.base,name:b.name,icon:b.icon,lane:s.lane,x:960,hp:b.hp*scale,maxHp:b.hp*scale,speed:b.speed,dmg:b.dmg*(1+G.wave*.045),rate:.48,cooldown:1,gold:45,boss:true,summon:b.summon,summonTimer:6,dead:false,slow:0};G.enemies.push(e);$('#bossBar').classList.remove('hidden');$('#bossName').textContent=b.name;return}
+      const b=ENEMY[s.type],scale=1+G.wave*.12+Math.max(0,G.wave-8)*.025;G.enemies.push({id:Math.random(),type:s.type,name:b.name,icon:b.icon,lane:s.lane,x:970+Math.random()*28,hp:b.hp*scale,maxHp:b.hp*scale,speed:b.speed*(1+Math.min(.22,G.wave*.008)),dmg:b.dmg*(1+G.wave*.05),rate:b.rate,cooldown:Math.random(),gold:b.gold,boss:false,armour:b.armour,flying:b.flying,ghost:b.ghost,regen:b.regen||0,slow:0,dead:false})
+    }
+    function updateUnits(dt){
+      G.board.forEach((u,i)=>{if(!u)return;const b=UNIT[u.type],lane=Math.floor(i/4),col=i%4,x=[520,425,330,235][col];u.cooldown-=dt;u.buff=Math.max(0,u.buff-dt);if(u.cooldown>0)return;
+        let rate=b.rate*(1+(u.buff>0?.5:0));if(save.commander==='ranger'&&['archer','spearman'].includes(u.type))rate*=1.15;if(['archer','mage','bomber','frost'].includes(u.type))rate*=1+G.mods.rangedRate;
+        if(b.heal){healPulse(u,lane,x);u.cooldown=1/rate;return}
+        const targets=G.enemies.filter(e=>!e.dead&&e.lane===lane&&e.x>=x-10&&e.x-x<=b.range&&(!e.flying||!['knight','spearman'].includes(u.type))).sort((a,b)=>a.x-b.x);const t=targets[0];if(!t)return;
+        let dmg=b.dmg*LEVEL_POWER[u.level-1]*(1+G.mods.allDmg);if(u.type==='archer')dmg*=1+G.mods.archerDmg;if(save.commander==='captain')dmg*=1.05;if(save.commander==='archmage'&&['mage','frost'].includes(u.type))dmg*=1.18;if(G.mods.lastStand&&G.hp<35)dmg*=1.35;if(t.armour){if(u.type==='spearman')dmg*=1.55+G.mods.armourDmg;else if(u.type==='archer')dmg*=.56}if(!['knight','spearman'].includes(u.type))dmg*=1+G.mods.projectile;
+        if(['knight','spearman'].includes(u.type)){damageEnemy(t,dmg,u.type);burst(t.x,t.lane,b.color,3)}else launchProjectile({x,lane},t,dmg,u.type,b.splash||0,b.slow||0);
+        if(u.type==='mage'&&Math.random()<G.mods.echo)setTimeout(()=>{if(G&&!G.paused&&!t.dead)launchProjectile({x,lane},t,dmg*.72,'mage',b.splash||0,0)},110);
+        u.cooldown=1/rate;G.ability=Math.min(100,G.ability+(.35*(1+G.mods.charge)))
+      })
+    }
+    function healPulse(u,lane,x){
+      const power=UNIT.healer.heal*LEVEL_POWER[u.level-1]*(1+G.mods.heal),hurt=G.board.filter(Boolean).filter(v=>v.hp<v.maxHp).sort((a,b)=>a.hp/a.maxHp-b.hp/b.maxHp)[0];
+      if(hurt){hurt.hp=Math.min(hurt.maxHp,hurt.hp+power);burst(x,lane,'#f0a9cf',5);floating(x,lane,'+'+Math.round(power),'#8be1a5')}else if(G.hp<G.maxHp){G.hp=Math.min(G.maxHp,G.hp+power*.42);burst(100,lane,'#f0a9cf',4)}
+    }
+    function updateEnemies(dt){
+      G.enemies.forEach(e=>{if(e.dead)return;if(e.regen)e.hp=Math.min(e.maxHp,e.hp+e.regen*dt*(1+G.wave*.04));if(e.slow>0)e.slow-=dt;if(e.summon){e.summonTimer-=dt;if(e.summonTimer<=0){e.summonTimer=6.5;for(let j=0;j<2;j++)spawnEnemy({type:'skeleton',lane:(e.lane+j)%3});toast('The Queen summons skeletons!',false,true)}}
+        e.cooldown-=dt;let blockIndex=-1;if(!e.flying){let bestX=-1;G.board.forEach((u,i)=>{if(!u||Math.floor(i/4)!==e.lane)return;const x=[520,425,330,235][i%4];if(x<=e.x&&x>bestX&&(!e.ghost||x<360)){bestX=x;blockIndex=i}})}
+        const bx=blockIndex>=0?[520,425,330,235][blockIndex%4]:90;if(blockIndex>=0&&e.x-bx<=39){if(e.cooldown<=0){const u=G.board[blockIndex];if(u){u.hp-=e.dmg;if(u.hp<=0){burst(bx,e.lane,'#e75c5c',12);G.board[blockIndex]=null;toast(UNIT[u.type].name+' fell!',false,true);selected(null)}else floating(bx,e.lane,'-'+Math.round(e.dmg),'#ff8b83');e.cooldown=1/e.rate;tone(110,.045,'square',.018)}}}
+        else {e.x-=e.speed*dt*(e.slow>0?.56:1);if(e.x<=92){castleHit(e);e.dead=true}}
+      });
+      const boss=G.enemies.find(e=>e.boss&&!e.dead);if(boss){$('#bossBar').classList.remove('hidden');$('#bossFill').style.width=(boss.hp/boss.maxHp*100)+'%'}else $('#bossBar').classList.add('hidden')
+    }
+    function castleHit(e){const dmg=e.boss?Math.max(24,e.dmg):e.dmg;G.hp=Math.max(0,G.hp-dmg);G.score=Math.max(0,G.score-100);burst(86,e.lane,'#ef654f',18);floating(92,e.lane,'-'+Math.round(dmg),'#ff695e');toast('CASTLE HIT!',false,true);tone(72,.22,'sawtooth',.06);if(G.hp<=0)endRun(false)}
+    function launchProjectile(from,target,dmg,kind,splash,slow){G.projectiles.push({x:from.x,lane:from.lane,target,dmg,kind,splash:splash*(1+G.mods.splash),slow:slow*(1+G.mods.slow),speed:kind==='bomber'?330:kind==='bolt'?520:450,dead:false})}
+    function updateProjectiles(dt){G.projectiles.forEach(p=>{if(p.dead)return;const t=p.target;if(!t||t.dead){p.dead=true;return}const dx=t.x-p.x,dir=Math.sign(dx);p.x+=dir*p.speed*dt;if(Math.abs(t.x-p.x)<16||Math.sign(t.x-p.x)!==dir){p.dead=true;damageEnemy(t,p.dmg,p.kind);if(p.splash)G.enemies.forEach(e=>{if(!e.dead&&e!==t&&e.lane===t.lane&&Math.abs(e.x-t.x)<p.splash)damageEnemy(e,p.dmg*.58,p.kind)});if(p.slow)t.slow=Math.max(t.slow,p.slow);burst(t.x,t.lane,UNIT[p.kind]?.color||'#f0c65a',p.splash?10:4)}})}
+    function damageEnemy(e,amount,kind){if(e.dead)return;e.hp-=amount;floating(e.x,e.lane,Math.round(amount),'#fff1a6');if(e.hp<=0){e.dead=true;G.kills++;save.totalKills++;const gold=Math.round(e.gold*(1+G.mods.gold));G.gold+=gold;G.score+=Math.round((e.boss?1500:24+e.maxHp*.65)*(1+G.wave*.04));G.ability=Math.min(100,G.ability+(e.boss?28:1.1)*(1+G.mods.charge));burst(e.x,e.lane,e.boss?'#f2c64d':'#e56b58',e.boss?30:10);tone(e.boss?660:220,e.boss?.35:.045,'triangle',e.boss?.06:.018);if(e.boss)bossDefeated(e);if(save.totalKills>=100)unlockAchievement('century')}}
+    function bossDefeated(e){G.bosses++;save.medals+=3;unlockAchievement('boss');persist();toast('BOSS DEFEATED!',true);if(G.mode==='campaign'&&G.wave>=15){setTimeout(()=>endRun(true),700);return}setTimeout(()=>{if(G&&!G.over)showUpgrade('Boss reward — choose one')},650)}
+    function updateEffects(dt){G.particles.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=.35*dt;p.life-=dt});G.texts.forEach(t=>{t.y-=.24*dt;t.life-=dt})}
+    function burst(x,lane,color,n=8){if(save.settings.reduced)n=Math.ceil(n*.35);for(let i=0;i<n;i++)G.particles.push({x,y:lane+Math.random()*.12-.06,vx:(Math.random()-.5)*100,vy:(Math.random()-.75)*.65,life:.35+Math.random()*.35,color})}
+    function floating(x,lane,text,color){if(save.settings.reduced&&Math.random()>.35)return;G.texts.push({x,y:lane,text,color,life:.72})}
+    function spawnRecruit(force=false){
+      const empty=[];G.board.forEach((u,i)=>{if(!u)empty.push(i)});if(!empty.length){if(!G.boardFullWarn){toast('BOARD FULL — MERGE OR DISMISS!',true,true);G.boardFullWarn=true;unlockAchievement('full')}return false}G.boardFullWarn=false;
+      const pool=save.activeUnits.length?save.activeUnits:save.unlockedUnits.slice(0,3);let weighted=[...pool];G.board.forEach(u=>{if(u&&u.level<=2&&pool.includes(u.type))weighted.push(u.type,u.type)});const type=weighted[Math.floor(Math.random()*weighted.length)],preferred=empty.sort((a,b)=>positionScore(type,a)-positionScore(type,b))[0];G.board[preferred]=makeUnit(type);renderBoard(preferred,'new');tone(520,.07,'sine',.03);if(force)toast(UNIT[type].name+' recruited');return true
+    }
+    function positionScore(type,i){const col=i%4;if(type==='knight'||type==='spearman')return col;return 3-col}
+    function selected(i){if(!G)return;G.selected=i;renderBoard();const u=i!==null?G.board[i]:null;$('#dismissBtn').disabled=!u;$('#sellValue').textContent=u?Math.round(4*Math.pow(2,u.level-1)):0}
+    function attemptMove(a,b){
+      if(a===null||b===null||a===b){selected(a);return}const u=G.board[a],v=G.board[b];if(!u)return;
+      if(!v){G.board[b]=u;G.board[a]=null;selected(b);tone(320,.045);renderBoard();return}
+      if(u.type===v.type&&u.level===v.level&&u.level<5){const next=u.level+1;G.board[a]=null;const nu=makeUnit(u.type,next);if(G.mods.mergeFrenzy)nu.buff=6;G.board[b]=nu;G.merges++;save.totalMerges++;G.highest=Math.max(G.highest,next);G.score+=25*Math.pow(3,next-2);G.ability=Math.min(100,G.ability+12*next*(G.daily.merge||1)*(1+G.mods.charge));G.combo=G.comboTimer>0?G.combo+1:1;G.bestCombo=Math.max(G.bestCombo||0,G.combo);G.comboTimer=3.2;if(G.combo>1){G.gold+=G.combo;toast('MERGE COMBO ×'+G.combo,true)}else toast(next>=4?'EVOLUTION!':'MERGE!',true);if(next===2)unlockAchievement('firstMerge');if(next===3)unlockAchievement('veteran');if(next===5)unlockAchievement('legendary');if(G.combo>=4)unlockAchievement('combo4');tone(420+next*110,.18,'triangle',.055);selected(b);renderBoard(b,'merged');burst([520,425,330,235][b%4],Math.floor(b/4),'#f3c84e',18);return}
+      toast(u.type===v.type&&u.level===5?'LEGENDARY UNIT MAXED':'Cannot merge',false,true);tone(120,.08,'square',.025);selected(a)
+    }
+    function useAbility(){
+      if(!G||G.paused||G.ability<100)return;G.ability=0;const c=save.commander;
+      if(c==='captain'){G.hp=Math.min(G.maxHp,G.hp+32);G.board.forEach(u=>{if(u)u.buff=8});toast('RALLY!',true);burst(100,1,'#7edc9c',24)}
+      if(c==='ranger'){G.enemies.filter(e=>!e.dead).forEach((e,i)=>setTimeout(()=>{if(G&&!e.dead){damageEnemy(e,42+G.wave*5,'archer');burst(e.x,e.lane,'#f3cf61',8)}},i*45));toast('ARROW STORM!',true)}
+      if(c==='archmage'){const counts=[0,0,0];G.enemies.forEach(e=>{if(!e.dead)counts[e.lane]++});const lane=counts.indexOf(Math.max(...counts));G.enemies.filter(e=>!e.dead&&e.lane===lane).forEach(e=>damageEnemy(e,120+G.wave*8,'mage'));burst(620,lane,'#be82ee',40);toast('METEOR!',true)}tone(700,.35,'sawtooth',.055)
+    }
+    function showUpgrade(title){
+      G.paused=true;const picks=[...UPGRADES].sort(()=>Math.random()-.5).slice(0,3);openModal(`<div class="modal"><div class="eyebrow" style="color:#8b5b72">Army strengthened</div><h2>Choose one</h2><p class="modal-sub">${title}</p><div class="choice-grid">${picks.map((u,i)=>`<button class="choice-btn" data-up="${i}"><span class="choice-icon">${u.icon}</span><b>${u.name}</b><small>${u.desc}</small></button>`).join('')}</div></div>`);
+      $$('[data-up]').forEach(b=>b.onclick=()=>{const u=picks[+b.dataset.up];u.apply(G);closeModal();G.paused=false;toast(u.name.toUpperCase(),true);tone(760,.22,'triangle',.05)})
+    }
+    function updateHUD(){if(!G)return;$('#waveValue').textContent=G.wave;$('#scoreValue').textContent=Math.round(G.score).toLocaleString();$('#goldValue').textContent=Math.floor(G.gold);$('#hpText').textContent=Math.ceil(G.hp)+' / '+G.maxHp;$('#hpFill').style.width=Math.max(0,G.hp/G.maxHp*100)+'%';$('#hpFill').style.background=G.hp/G.maxHp<.35?'#e35858':'#68c884';const interval=Math.max(2.45,4.7-G.time*.0035-save.upgrades.recruitment*.08)*(1-G.mods.recruit);$('#recruitTime').textContent=Math.max(0,G.recruitTimer).toFixed(1)+'s';$('#recruitFill').style.width=Math.max(0,(1-G.recruitTimer/interval)*100)+'%';$('#recruitCost').textContent=G.recruitCost+'G';$('#recruitBtn').disabled=G.gold<G.recruitCost;const cmd=COMMANDERS[save.commander];$('#abilityName').textContent=cmd.ability;$('#chargeText').textContent=Math.floor(G.ability)+'%';$('#abilityBtn').classList.toggle('ready',G.ability>=100);$('#abilityBtn').disabled=G.ability<100}
+    function renderBoard(flash=-1,cls=''){
+      if(!G)return;els.board.innerHTML=G.board.map((u,i)=>{const role=i%4===0?'front':i%4===3?'back':'mid',sel=G.selected===i?' selected':'';if(!u)return `<button class="slot ${role}${sel}" data-i="${i}" data-key="${i<9?i+1:''}" aria-label="Empty slot ${i+1}"></button>`;const b=UNIT[u.type],stars='★'.repeat(u.level),hp=Math.max(0,u.hp/u.maxHp*100);return `<button class="slot ${role}${sel}${i===flash?' '+cls:''}" data-i="${i}" data-key="${i<9?i+1:''}" aria-label="${LEVEL_NAMES[u.level-1]} ${b.name}, level ${u.level}"><span class="unit-card"><span class="unit-icon">${b.icon}</span><span class="unit-info"><span class="unit-name">${b.name}</span><span class="unit-level">${stars}</span><span class="unit-hp"><i style="width:${hp}%"></i></span></span></span></button>`}).join('')
+    }
+    function draw(){
+      if(!G)return;const c=els.canvas,rect=c.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);if(c.width!==Math.round(rect.width*dpr)||c.height!==Math.round(rect.height*dpr)){c.width=Math.round(rect.width*dpr);c.height=Math.round(rect.height*dpr)}const ctx=els.ctx,w=rect.width,h=rect.height;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+      for(let l=0;l<3;l++){ctx.fillStyle=l%2?'#43384b':'#3a3244';ctx.fillRect(0,l*h/3,w,h/3);ctx.strokeStyle='#65546f';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,(l+1)*h/3);ctx.lineTo(w,(l+1)*h/3);ctx.stroke()}
+      ctx.fillStyle='#766348';ctx.fillRect(0,h-13,w,13);ctx.font=`${Math.max(38,h*.23)}px serif`;ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🏰',Math.max(36,w*.058),h*.5);
+      const sx=x=>x/1000*w, sy=l=>(l+.5)*h/3;
+      G.board.forEach((u,i)=>{if(!u)return;const x=[520,425,330,235][i%4],y=sy(Math.floor(i/4));ctx.globalAlpha=.96;ctx.font=`${Math.max(23,Math.min(42,h*.16))}px serif`;ctx.fillText(UNIT[u.type].icon,sx(x),y);ctx.globalAlpha=1;ctx.fillStyle='#17121c';ctx.fillRect(sx(x)-20,y+22,40,4);ctx.fillStyle='#70cf8c';ctx.fillRect(sx(x)-20,y+22,40*Math.max(0,u.hp/u.maxHp),4);ctx.fillStyle='#f5d568';ctx.font='bold 10px Arial';ctx.fillText('★'.repeat(u.level),sx(x),y-25)});
+      G.enemies.forEach(e=>{if(e.dead)return;const x=sx(e.x),y=sy(e.lane)+(e.flying?Math.sin(G.time*5+e.id)*6-18:0),size=e.boss?Math.max(42,h*.23):Math.max(26,Math.min(39,h*.15));ctx.font=`${size}px serif`;ctx.fillText(e.icon,x,y);ctx.fillStyle='#17121c';ctx.fillRect(x-(e.boss?35:20),y+22,e.boss?70:40,5);ctx.fillStyle=e.boss?'#d7586b':'#eb6a57';ctx.fillRect(x-(e.boss?35:20),y+22,(e.boss?70:40)*Math.max(0,e.hp/e.maxHp),5);if(e.armour){ctx.fillStyle='#d7c8df';ctx.font='12px Arial';ctx.fillText('◆',x,y-25)}if(e.slow>0){ctx.fillStyle='#83d8ed';ctx.font='12px Arial';ctx.fillText('❄',x+18,y-18)}});
+      G.projectiles.forEach(p=>{if(p.dead)return;ctx.fillStyle=p.kind==='mage'?'#c889f1':p.kind==='frost'?'#83e1f0':p.kind==='bomber'?'#f27a4f':'#f6d159';ctx.beginPath();ctx.arc(sx(p.x),sy(p.lane),p.kind==='bomber'?6:3,0,Math.PI*2);ctx.fill()});
+      G.particles.forEach(p=>{ctx.globalAlpha=Math.max(0,p.life/.7);ctx.fillStyle=p.color;ctx.fillRect(sx(p.x)-2,sy(p.y)-2,4,4)});ctx.globalAlpha=1;
+      G.texts.forEach(t=>{ctx.globalAlpha=Math.min(1,t.life*2);ctx.fillStyle=t.color;ctx.font='bold 12px Arial';ctx.fillText(t.text,sx(t.x),sy(t.y)-20)});ctx.globalAlpha=1;
+    }
+    function endRun(victory){
+      if(!G||G.over)return;G.over=true;G.paused=true;save.totalRuns++;const medals=Math.max(1,Math.floor(G.wave/3)+G.bosses*2+(victory?8:0));save.medals+=medals;save.records.wave=Math.max(save.records.wave,G.wave);save.records.score=Math.max(save.records.score,Math.round(G.score));save.records.time=Math.max(save.records.time,Math.floor(G.time));save.records.level=Math.max(save.records.level,G.highest);save.records.combo=Math.max(save.records.combo,G.bestCombo||0);save.records.kills=Math.max(save.records.kills,G.kills);save.records.bosses=Math.max(save.records.bosses,G.bosses);persist();unlockProgress();
+      const near=G.score>save.records.score*.9?'A new record was within reach. One more run?':`Your army defeated ${G.kills} enemies.`;
+      setTimeout(()=>openModal(`<div class="modal"><div class="eyebrow" style="color:#8b5b72">${victory?'Greenwood secured':'The line has fallen'}</div><h2>${victory?'Victory!':'Castle Destroyed'}</h2><p class="modal-sub">${near}</p><div class="end-stats"><div class="end-stat"><b>${G.wave}</b><span>Wave</span></div><div class="end-stat"><b>${Math.round(G.score).toLocaleString()}</b><span>Score</span></div><div class="end-stat"><b>+${medals}</b><span>Medals</span></div></div><div class="modal-actions"><button class="primary-btn" id="againBtn">Play Again</button><button class="plain-btn" id="menuBtn">Main Menu</button></div></div>`),350);setTimeout(()=>{$('#againBtn')&&($('#againBtn').onclick=()=>resetGame(G.mode));$('#menuBtn')&&($('#menuBtn').onclick=returnMenu)},380);tone(victory?720:88,.65,victory?'triangle':'sawtooth',.065)
+    }
+    function openModal(html){els.modal.innerHTML=`<div class="modal-backdrop">${html}</div>`}
+    function closeModal(){els.modal.innerHTML=''}
+    function pauseGame(){if(!G||G.over)return;G.paused=true;openModal(`<div class="modal dark"><div class="eyebrow">Battle paused</div><h2>Hold the line</h2><div class="list"><div class="list-row"><span>Controls</span><b>Drag, or tap unit → destination</b></div><div class="list-row"><span>Ability</span><b><span class="kbd">Space</span></b></div><div class="list-row"><span>Pause</span><b><span class="kbd">P</span></b></div></div><div class="modal-actions"><button class="primary-btn" id="resumeBtn">Resume</button><button class="plain-btn" id="restartBtn">Restart Run</button><button class="plain-btn" id="quitBtn">Main Menu</button></div></div>`);$('#resumeBtn').onclick=()=>{closeModal();G.paused=false;last=performance.now()};$('#restartBtn').onclick=()=>confirmAction('Restart this run?',()=>resetGame(G.mode));$('#quitBtn').onclick=()=>confirmAction('Leave this run?',returnMenu)}
+    function confirmAction(question,yes){openModal(`<div class="modal"><h2>Are you sure?</h2><p>${question}</p><div class="modal-actions"><button class="plain-btn danger" id="yesBtn">Yes</button><button class="plain-btn" id="noBtn">Cancel</button></div></div>`);$('#yesBtn').onclick=yes;$('#noBtn').onclick=()=>{closeModal();if(G&&!G.over)G.paused=false}}
+    function showPanel(name){
+      if(name==='how')openModal(`<div class="modal"><div class="eyebrow" style="color:#8b5b72">Field manual</div><h2>How to play</h2><div class="list"><div class="list-row"><span>1 · Merge</span><b>Match same class + same level</b></div><div class="list-row"><span>2 · Position</span><b>Tanks front · ranged back</b></div><div class="list-row"><span>3 · React</span><b>Watch the next-wave warning</b></div><div class="list-row"><span>4 · Command</span><b>Use your charged ability</b></div><div class="list-row"><span>5 · Survive</span><b>Protect the castle through bosses</b></div></div><p>Many weaker soldiers can defend several lanes; one merged soldier hits much harder. That trade-off is the heart of the game.</p><button class="primary-btn closePanel">Ready</button></div>`);
+      if(name==='commanders'){const rows=Object.entries(COMMANDERS).map(([id,c])=>{const on=save.unlockedCommanders.includes(id),sel=save.commander===id;return `<div class="list-row"><div class="mode-card"><span class="mode-icon">${c.icon}</span><span><b>${c.name}</b><small style="display:block">${c.desc}</small></span></div><button class="switch ${sel?'on':''}" data-commander="${id}" ${on?'':'disabled'}>${sel?'Selected':on?'Choose':c.need+' medals'}</button></div>`}).join('');openModal(`<div class="modal"><h2>Commanders</h2><p class="modal-sub">Choose one leader for your next battle.</p><div class="list">${rows}</div><button class="primary-btn closePanel">Done</button></div>`)}
+      if(name==='army'){const rows=Object.entries(UNIT).map(([id,u])=>{const on=save.unlockedUnits.includes(id),active=save.activeUnits.includes(id);return `<div class="list-row"><div class="mode-card"><span class="mode-icon">${u.icon}</span><span><b>${u.name}</b><small style="display:block">${u.role}</small></span></div><button class="switch ${active?'on':''}" data-unit="${id}" ${on?'':'disabled'}>${active?'Active':on?'Bench':u.unlock+' medals'}</button></div>`}).join('');openModal(`<div class="modal"><h2>Your Army</h2><p class="modal-sub">Pick 3–5 active unit types. A focused pool makes merging fair.</p><div class="list">${rows}</div><button class="primary-btn closePanel">Done</button></div>`)}
+      if(name==='upgrades'){const costs=k=>5+save.upgrades[k]*6,items=[['recruitment','⏱️','Recruitment','Faster recruit arrival'],['fortification','🏰','Fortification','More castle and soldier HP'],['training','⚔️','Training','Minor all-damage bonus'],['logistics','🪙','Logistics','More starting gold'],['command','⚡','Command','Faster ability charge']];openModal(`<div class="modal"><h2>War College</h2><p class="modal-sub">Spend medals on modest permanent bonuses. Skill still matters most.</p><div class="list">${items.map(([id,ic,n,d])=>`<div class="list-row"><div class="mode-card"><span class="mode-icon">${ic}</span><span><b>${n} · Lv ${save.upgrades[id]}</b><small style="display:block">${d}</small></span></div><button class="switch" data-perm="${id}" ${save.medals<costs(id)?'disabled':''}>${costs(id)} 🎖</button></div>`).join('')}</div><button class="primary-btn closePanel">Done · ${save.medals} medals left</button></div>`)}
+      if(name==='achievements'){openModal(`<div class="modal"><h2>Achievements</h2><p class="modal-sub">${Object.keys(save.achievements).length} of ${Object.keys(ACHIEVEMENTS).length} earned</p><div class="list">${Object.entries(ACHIEVEMENTS).map(([id,a])=>`<div class="list-row achievement ${save.achievements[id]?'unlocked':''}"><span>${save.achievements[id]?'🏅':'🔒'} <b>${a[0]}</b></span><small>${a[1]}</small></div>`).join('')}</div><button class="primary-btn closePanel">Done</button></div>`)}
+      if(name==='settings')renderSettings();
+      bindPanel(name)
+    }
+    function renderSettings(){openModal(`<div class="modal"><h2>Settings</h2><div class="list"><div class="list-row"><span>Sound effects</span><button class="switch ${save.settings.sound?'on':''}" data-setting="sound">${save.settings.sound?'On':'Off'}</button></div><div class="list-row"><span>Battle music</span><button class="switch ${save.settings.music?'on':''}" data-setting="music">${save.settings.music?'On':'Off'}</button></div><div class="list-row"><span>Reduced effects</span><button class="switch ${save.settings.reduced?'on':''}" data-setting="reduced">${save.settings.reduced?'On':'Off'}</button></div><div class="list-row"><span>Tutorial</span><button class="switch" id="replayTutorial">Replay</button></div></div><div class="modal-actions"><button class="primary-btn closePanel">Done</button><button class="plain-btn danger" id="resetProgress">Reset Progress</button></div></div>`)}
+    function bindPanel(name){
+      $$('.closePanel').forEach(b=>b.onclick=closeModal);
+      $$('[data-commander]').forEach(b=>b.onclick=()=>{if(b.disabled)return;save.commander=b.dataset.commander;persist();showPanel('commanders')});
+      $$('[data-unit]').forEach(b=>b.onclick=()=>{if(b.disabled)return;const id=b.dataset.unit,active=save.activeUnits.includes(id);if(active&&save.activeUnits.length<=3){toast('Keep at least 3 active units',false,true);return}if(!active&&save.activeUnits.length>=5){toast('Maximum 5 active units',false,true);return}save.activeUnits=active?save.activeUnits.filter(x=>x!==id):[...save.activeUnits,id];persist();showPanel('army')});
+      $$('[data-perm]').forEach(b=>b.onclick=()=>{const id=b.dataset.perm,cost=5+save.upgrades[id]*6;if(save.medals<cost)return;save.medals-=cost;save.upgrades[id]++;persist();showPanel('upgrades')});
+      $$('[data-setting]').forEach(b=>b.onclick=()=>{const id=b.dataset.setting;save.settings[id]=!save.settings[id];persist();renderSettings();bindPanel('settings');if(id==='music')setMusic(!!G)});
+      $('#replayTutorial')&&($('#replayTutorial').onclick=()=>{save.tutorialDone=false;persist();toast('Tutorial will replay next battle');closeModal()});
+      $('#resetProgress')&&($('#resetProgress').onclick=()=>confirmAction('Erase medals, records, unlocks and settings?',()=>{localStorage.removeItem(SAVE_KEY);save=clone(DEFAULT_SAVE);updateMenu();closeModal()}))
+    }
+    els.board.addEventListener('pointerdown',e=>{if(!G||G.paused)return;const s=e.target.closest('.slot');if(!s)return;e.preventDefault();const i=+s.dataset.i;drag={source:G.board[i]?i:null,startX:e.clientX,startY:e.clientY,moved:false,pointerId:e.pointerId,ghost:null};if(drag.source!==null){s.classList.add('drag-source');G.board.forEach((u,j)=>{const el=els.board.querySelector(`[data-i="${j}"]`);if(!el||j===i)return;if(!u||u.type===G.board[i].type&&u.level===G.board[i].level&&u.level<5)el.classList.add('valid');else el.classList.add('invalid')})}});
+    document.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.pointerId||drag.source===null)return;const dist=Math.hypot(e.clientX-drag.startX,e.clientY-drag.startY);if(dist>7&&!drag.moved){drag.moved=true;drag.ghost=document.createElement('div');drag.ghost.className='drag-ghost';drag.ghost.textContent=UNIT[G.board[drag.source].type].icon;document.body.appendChild(drag.ghost)}if(drag.ghost){drag.ghost.style.left=e.clientX+'px';drag.ghost.style.top=e.clientY+'px'}});
+    document.addEventListener('pointerup',e=>{if(!drag||e.pointerId!==drag.pointerId)return;const d=drag;drag=null;d.ghost?.remove();const target=document.elementFromPoint(e.clientX,e.clientY)?.closest?.('.slot'),i=target?+target.dataset.i:null;if(d.moved&&d.source!==null&&i!==null)attemptMove(d.source,i);else if(i!==null){if(G.selected!==null&&G.selected!==i)attemptMove(G.selected,i);else selected(G.selected===i?null:i)}renderBoard()});
+    $('#playBtn').onclick=()=>{openAudio();resetGame('campaign')};$$('[data-mode]').forEach(b=>b.onclick=()=>{openAudio();resetGame(b.dataset.mode)});$$('[data-panel]').forEach(b=>b.onclick=()=>showPanel(b.dataset.panel));
+    $('#pauseBtn').onclick=pauseGame;$('#abilityBtn').onclick=useAbility;$('#recruitBtn').onclick=()=>{if(G.gold<G.recruitCost)return;if(spawnRecruit(true)){G.gold-=G.recruitCost;G.recruitCost=Math.min(90,G.recruitCost+8)}};$('#dismissBtn').onclick=()=>{if(G.selected===null||!G.board[G.selected])return;const u=G.board[G.selected],gain=Math.round(4*Math.pow(2,u.level-1));G.gold+=gain;G.board[G.selected]=null;toast(UNIT[u.type].name+' dismissed · +'+gain+'G');selected(null)};
+    document.addEventListener('keydown',e=>{if(!G||G.over)return;if(e.key.toLowerCase()==='p'){e.preventDefault();G.paused?($('#resumeBtn')?.click()):pauseGame()}if(e.code==='Space'){e.preventDefault();useAbility()}const n=+e.key;if(n>=1&&n<=9){e.preventDefault();const i=n-1;if(G.selected!==null&&G.selected!==i)attemptMove(G.selected,i);else selected(i)}});
+    window.addEventListener('blur',()=>{if(G&&!G.paused&&!G.over)pauseGame()});window.addEventListener('resize',draw);
+    updateMenu();
+  })();
+  </script>
+</body>
+</html>
