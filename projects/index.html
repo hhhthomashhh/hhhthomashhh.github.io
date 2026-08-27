@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Browse every tool, game, and home reference in Thomas's Playground.">
+  <meta name="theme-color" content="#f7f5ef">
+  <title>All Projects · Thomas's Playground</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-page="projects">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="../" aria-label="Thomas's Playground home">
+        <span class="brand-mark" aria-hidden="true">T</span>
+        <span>Thomas's Playground</span>
+      </a>
+      <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-nav">
+        <span class="sr-only">Open menu</span><span></span><span></span><span></span>
+      </button>
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+        <a href="../">Home</a>
+        <a class="active" href="./">All Projects</a>
+        <a href="?category=games">Games</a>
+        <a href="../appliances/">Home Library</a>
+        <a class="nav-search" href="#project-search" aria-label="Search projects">Search <span aria-hidden="true">⌕</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="library-main">
+    <section class="library-hero shell">
+      <a class="back-link" href="../"><span aria-hidden="true">←</span> Back home</a>
+      <p class="eyebrow">Project library</p>
+      <h1>Find your next<br><em>useful thing.</em></h1>
+      <p>Search and filter every live tool, game, and home reference. Select the star to keep favourites at the top of your own list.</p>
+    </section>
+
+    <section class="library-shell shell" aria-labelledby="library-title">
+      <h2 class="sr-only" id="library-title">All projects</h2>
+      <div class="library-toolbar">
+        <label class="search-box" for="project-search">
+          <span aria-hidden="true">⌕</span>
+          <span class="sr-only">Search projects</span>
+          <input id="project-search" type="search" autocomplete="off" placeholder="Search projects, games, or topics…">
+          <kbd>/</kbd>
+        </label>
+        <div class="sort-wrap">
+          <label for="project-sort">Sort</label>
+          <select id="project-sort">
+            <option value="newest">Newest first</option>
+            <option value="az">A–Z</option>
+            <option value="category">By section</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="filter-row" aria-label="Filter projects">
+        <div class="filter-buttons" role="group" aria-label="Project category">
+          <button class="filter-button active" type="button" data-filter="all">All <span data-all-count>11</span></button>
+          <button class="filter-button" type="button" data-filter="tools">Tools <span data-tool-count>1</span></button>
+          <button class="filter-button" type="button" data-filter="games">Games <span data-game-total>9</span></button>
+          <button class="filter-button" type="button" data-filter="home">Home <span data-home-count>1</span></button>
+        </div>
+        <button class="favourites-toggle" type="button" aria-pressed="false"><span aria-hidden="true">☆</span> Favourites</button>
+      </div>
+
+      <div class="results-line" aria-live="polite"><strong id="result-count">11 projects</strong><span id="result-context"> across the complete collection</span></div>
+      <div class="project-grid" id="project-library"></div>
+      <div class="empty-state" id="empty-state" hidden>
+        <span aria-hidden="true">⌕</span><h3>No projects found</h3><p>Try another search or clear the active filter.</p><button class="button secondary" id="clear-filters" type="button">Clear filters</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <div><strong>Thomas's Playground</strong><p>Things I build, test, and enjoy.</p></div>
+      <div class="footer-links"><a href="./">All Projects</a><a href="?category=games">Games</a><a href="../appliances/">Home Library</a></div>
+      <p class="copyright">Built for fun · Hosted on GitHub Pages</p>
+    </div>
+  </footer>
+  <noscript><p class="noscript">JavaScript is needed to search and filter the project collection. Return to the <a href="../">homepage</a> for direct links.</p></noscript>
+  <script src="../assets/projects.js"></script>
+</body>
+</html>
