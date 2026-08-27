@@ -1,0 +1,16 @@
+{
+  "name": "Life Calculators",
+  "short_name": "Calculators",
+  "description": "Simple calculators for money, time, travel, health, and everyday life.",
+  "start_url": "/life-calculators/",
+  "scope": "/life-calculators/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#386a5b",
+  "orientation": "any",
+  "categories": ["utilities", "finance", "productivity"],
+  "icons": [
+    {"src":"/life-calculators/icons/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"/life-calculators/icons/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

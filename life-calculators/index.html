@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f7f4ef" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Life Calculators" />
+  <link rel="manifest" href="/life-calculators/manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="/life-calculators/icons/icon-192.png" />
+  <title>Life Calculators</title>
+  <meta name="description" content="Simple calculators for money, time, travel, health, and everyday life." />
+  <link rel="stylesheet" href="/life-calculators/app.css" />
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/life-calculators/" data-home>Life Calculators</a>
+      <div class="top-search"><span class="search-icon">⌕</span><input id="topSearch" type="search" placeholder="Search calculators" aria-label="Search calculators"></div>
+      <div class="nav-actions">
+        <button class="icon-btn nav-text" id="favoritesNav" title="Favorites">★ Favorites</button>
+        <button class="icon-btn" id="installBtn" title="Install Life Calculators" aria-label="Install Life Calculators" hidden>⬇ Install</button>
+        <button class="icon-btn" id="themeBtn" title="Appearance" aria-label="Change appearance">◐</button>
+      </div>
+    </div>
+  </header>
+  <main id="appMain"></main>
+  <footer class="footer">Life Calculators · Local-first everyday tools. No account required.</footer>
+  <nav class="bottom-nav" aria-label="Mobile navigation">
+    <button data-bottom="home"><span>⌂</span>Home</button>
+    <button data-bottom="search"><span>⌕</span>Search</button>
+    <button data-bottom="categories"><span>▦</span>Categories</button>
+    <button data-bottom="favorites"><span>★</span>Favorites</button>
+  </nav>
+</div>
+<script src="/life-calculators/js/core.js"></script>
+<script src="/life-calculators/js/money-a.js"></script>
+<script src="/life-calculators/js/money-b.js"></script>
+<script src="/life-calculators/js/retirement.js"></script>
+<script src="/life-calculators/js/dates.js"></script>
+<script src="/life-calculators/js/everyday.js"></script>
+<script src="/life-calculators/js/travel.js"></script>
+<script src="/life-calculators/js/currency.js"></script>
+<script src="/life-calculators/js/pace.js"></script>
+<script src="/life-calculators/js/boot.js"></script>
+</body>
+</html>
