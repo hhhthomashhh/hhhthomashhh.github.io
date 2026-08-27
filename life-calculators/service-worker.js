@@ -1,4 +1,4 @@
-const CACHE = "life-calculators-v1.2";
+const CACHE = "life-calculators-v1.3";
 const APP_SHELL = [
   "/life-calculators/",
   "/life-calculators/index.html",
