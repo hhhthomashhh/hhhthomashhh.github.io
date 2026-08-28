@@ -2,6 +2,14 @@
 'use strict';
 const projects = [
 {
+id: 'japanese-travel-translator', title: 'Japanese Travel Translator', category: 'tools', icon: 'あ', tone: 'red',
+status: 'Live', version: 'v1.0', updated: 'Aug 2026', order: 120,
+description: 'A mobile-first travel translator for English or Cantonese conversations in Japan, with Japanese speech, Show to Staff mode, useful phrases, and photo translation for menus and signs.',
+short: 'Translate conversations, speak Japanese, and scan menus or signs.',
+url: 'https://japanese-travel-translator.huithomas.chatgpt.site', action: 'Open translator', featured: true, recent: true, external: true,
+tags: ['Travel', 'Translation', 'Japanese', 'Cantonese', 'Photo scan', 'PWA']
+},
+{
 id: 'life-calculators', title: 'Life Calculators', category: 'tools', icon: '∑', tone: 'green',
 status: 'Live', version: 'v1.2', updated: 'Aug 2026', order: 115,
 description: 'A polished collection of everyday calculators for money, retirement, dates, travel, health, shopping, and more, with an installable Android-friendly app experience.',
