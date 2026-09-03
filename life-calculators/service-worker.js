@@ -1,9 +1,11 @@
-const CACHE = "life-calculators-v1.3";
+const CACHE = "life-calculators-v1.4";
 const APP_SHELL = [
   "/life-calculators/",
   "/life-calculators/index.html",
   "/life-calculators/app.css",
+  "/life-calculators/regular.css",
   "/life-calculators/js/core.js",
+  "/life-calculators/js/regular.js",
   "/life-calculators/js/money-a.js",
   "/life-calculators/js/money-b.js",
   "/life-calculators/js/retirement.js",
