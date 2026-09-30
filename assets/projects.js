@@ -2,6 +2,14 @@
 'use strict';
 const projects = [
 {
+id: 'last-train-out', title: 'Last Train Out', category: 'games', icon: '⇄', tone: 'cyan',
+status: 'Live', version: 'v1.0', updated: 'Sep 2026', order: 130,
+description: 'Run a miniature rail network in a three-minute traffic-control puzzle. Route local, express, freight, and emergency trains, manage entry signals, bypass broken tracks, and build arrival combos.',
+short: 'Five switches, four destinations, and three minutes of rail chaos.',
+url: '/games/last-train-out/', action: 'Dispatch trains', featured: true, recent: true,
+tags: ['Trains', 'Puzzle', 'Traffic control', 'Quick play', 'Touch friendly']
+},
+{
 id: 'japanese-travel-translator', title: 'Japanese Travel Translator', category: 'tools', icon: 'あ', tone: 'red',
 status: 'Live', version: 'v1.0', updated: 'Aug 2026', order: 120,
 description: 'A mobile-first travel translator for English or Cantonese conversations in Japan, with Japanese speech, Show to Staff mode, useful phrases, and photo translation for menus and signs.',
