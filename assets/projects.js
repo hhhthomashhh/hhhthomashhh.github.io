@@ -27,11 +27,11 @@ tags: ['Calculators', 'Finance', 'Travel', 'Health', 'Utilities', 'PWA']
 },
 {
 id: 'merge-army', title: 'Merge Army', category: 'games', icon: '⚔', tone: 'violet',
-status: 'Live', version: 'v1.0', updated: 'Aug 2026', order: 110,
-description: 'Merge matching soldiers into powerful evolutions, position your army, and hold three lanes against escalating waves and bosses.',
-short: 'Merge, position, and defend three chaotic lanes.',
+status: 'Live', version: 'v2.0', updated: 'Oct 2026', order: 110,
+description: 'Lead an illustrated fantasy army through the Greenwood Siege. Merge, move, and swap soldiers across three lanes, choose battle upgrades, and defeat three bosses. Includes Campaign, Endless, Daily, and offline app play.',
+short: 'An illustrated army, clever merges, and one last stand.',
 url: '/games/merge-army/', action: 'Play game', featured: true, recent: true,
-tags: ['Strategy', 'Quick play']
+tags: ['Strategy', 'Merging', 'Touch friendly', 'Offline', 'PWA']
 },
 {
 id: 'block-blast-arena', title: 'Block Blast Arena', category: 'games', icon: '◆', tone: 'coral',
