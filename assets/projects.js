@@ -2,6 +2,14 @@
 'use strict';
 const projects = [
 {
+id: 'gold-runner', title: 'Gold Runner (1983 Style)', category: 'games', icon: '▣', tone: 'gold',
+status: 'Live', version: 'v1.0', updated: 'Oct 2026', order: 140,
+description: 'A tribute to the 1983 puzzle-platform classic. Climb ladders, hang from ropes, dig traps for guards, collect the gold, and escape across 150 newly generated stages. Includes a level editor and touch controls.',
+short: 'Dig traps, collect gold, outsmart guards, and escape.',
+url: '/games/gold-runner/', action: 'Play Gold Runner', featured: true, recent: true,
+tags: ['Retro', 'Puzzle', 'Platformer', '1983', 'Ladders', 'Touch friendly', 'Level editor']
+},
+{
 id: 'last-train-out', title: 'Last Train Out', category: 'games', icon: '⇄', tone: 'cyan',
 status: 'Live', version: 'v1.0', updated: 'Sep 2026', order: 130,
 description: 'Run a miniature rail network in a three-minute traffic-control puzzle. Route local, express, freight, and emergency trains, manage entry signals, bypass broken tracks, and build arrival combos.',
