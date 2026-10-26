@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"><meta name="theme-color" content="#080e23"><title>Gold Runner • 1983-style puzzle platformer</title>
+<style>
+:root{--bg:#090e24;--panel:#101a34;--line:#273760;--blue:#8dccff;--gold:#ffd65e;--text:#e4eeff;--muted:#9db2d9}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% 0,#16244b,#080d20 75%);color:var(--text);font-family:ui-monospace,Menlo,Consolas,"Courier New",monospace}body{display:flex;justify-content:center;align-items:flex-start}button,select{font:inherit}button{cursor:pointer}button:focus-visible,select:focus-visible{outline:2px solid #ffe28b;outline-offset:2px}.app{width:min(100%,1000px);padding:12px 12px 24px}.top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:10px}.brand{display:flex;align-items:center;gap:10px}.brand .diamond{color:#ffc85d;font-size:25px;text-shadow:0 0 12px #ffb62f}.brand h1{font-size:clamp(18px,3.5vw,25px);letter-spacing:2px;line-height:1.1;margin:0;color:#f2d37b}.brand small{display:block;margin-top:3px;color:var(--muted);font-size:10px;letter-spacing:1px}.actions{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.ui{border:1px solid var(--line);border-radius:7px;background:#182647;color:var(--text);padding:7px 10px;min-height:35px;box-shadow:inset 0 1px #ffffff13}.ui:hover{background:#25365a}.ui.selected,.ui.main{border-color:#e5b94d;color:#ffdd85}.screen{position:relative;border:3px solid #38548a;border-radius:5px;overflow:hidden;background:#050816;box-shadow:0 8px 40px #0008}.screen canvas{display:block;width:100%;height:auto;image-rendering:pixelated;touch-action:none}.cover{position:absolute;inset:0;background:#07112bdc;display:flex;align-items:center;justify-content:center;padding:16px;z-index:2}.cover.hidden{display:none}.coverInner{max-width:450px;text-align:center;border:2px solid #6482bf;padding:clamp(14px,3vw,30px);background:#101a36;box-shadow:0 12px 38px #0009}.cover .kicker{font-size:11px;letter-spacing:2px;color:#86b8ff}.cover h2{font-size:clamp(24px,6vw,40px);line-height:1.04;color:#ffd369;letter-spacing:3px;margin:12px 0}.cover p{color:#c6d9f2;font-size:13px;line-height:1.7}.cover button{padding:10px 25px;margin-top:5px;color:#061027;background:#ffd56d;border:0;border-radius:4px;font-weight:900;font-size:17px}.stats{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center;padding:9px 1px;color:#acc2e9;font-size:12px}.stats b{color:#ffdb78}.controls{display:flex;justify-content:space-between;align-items:center;gap:24px;margin:10px auto 4px;max-width:800px;touch-action:none;user-select:none;-webkit-user-select:none}.dpad{display:grid;grid-template-columns:repeat(3,60px);grid-template-rows:repeat(3,49px);gap:4px}.touch{touch-action:none;-webkit-tap-highlight-color:transparent;display:flex;align-items:center;justify-content:center;border:2px solid #4e6799;background:linear-gradient(#243d6b,#142346);border-radius:10px;min-height:45px;color:#fff;font-size:21px;font-weight:bold;box-shadow:0 4px #09112a;user-select:none}.touch:active,.touch.pressed{background:#5279b0;transform:translateY(2px);box-shadow:0 2px #09112a}.dpad [data-key=up]{grid-column:2;grid-row:1}.dpad [data-key=left]{grid-column:1;grid-row:2}.dpad [data-key=right]{grid-column:3;grid-row:2}.dpad [data-key=down]{grid-column:2;grid-row:3}.dpad .mid{grid-column:2;grid-row:2;border:1px solid #283958;border-radius:9px;display:flex;align-items:center;justify-content:center;color:#6785bd}.digbtns{display:flex;gap:12px;align-items:center}.dig{width:84px;height:84px;border-radius:50%;display:flex;flex-direction:column;font-size:28px;border-color:#d5a95d;color:#ffd36e}.dig span{font-size:10px;letter-spacing:.4px}.help{color:#99b0d1;font-size:12px;line-height:1.6;margin:10px 0;text-align:center}.help strong{color:#e2ebff}.editor{display:none;border:1px solid #46629c;border-radius:6px;padding:10px;background:#142044;margin-top:8px}.editor.active{display:block}.editor .toolrow{display:flex;gap:6px;flex-wrap:wrap;margin:7px 0}.editor .tool{border:1px solid #49608e;background:#263b61;color:#e7f0ff;padding:8px 9px;border-radius:6px}.editor .tool.active{background:#e4bf66;color:#0b1740}.editor .edactions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}.editor textarea{width:100%;height:60px;background:#0b1631;color:#eaf3ff;border:1px solid #5070b1;padding:8px;margin:6px 0}.toast{min-height:18px;text-align:center;font-size:12px;color:#f9d77b}.foot{text-align:center;color:#7b90b5;font-size:10px;line-height:1.65;margin-top:12px}@media(max-width:620px){.app{padding:7px 6px 20px}.top{justify-content:center}.actions{justify-content:center}.ui{font-size:11px;padding:6px 8px;min-height:32px}.dpad{grid-template-columns:repeat(3,52px);grid-template-rows:repeat(3,47px)}.dig{width:69px;height:69px;font-size:23px}.digbtns{gap:8px}.controls{gap:9px}.help{font-size:10px}.stats{font-size:10px;justify-content:space-around}}@media(max-width:395px){.dpad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,42px)}.dig{width:62px;height:62px}.app{padding-inline:4px}}
+</style></head><body><main class="app">
+<header class="top"><div class="brand"><span class="diamond">◆</span><div><h1>GOLD RUNNER</h1><small>A RETRO 1983-STYLE TRIBUTE</small></div></div><div class="actions"><button class="ui main" id="startBtn">▶ Start</button><button class="ui" id="pauseBtn">Ⅱ Pause</button><button class="ui" id="restartBtn">↻ Retry</button><select class="ui" id="levelSelect" title="Choose level"></select><select class="ui" id="modeSelect" title="Difficulty"><option value="classic">Classic</option><option value="relaxed">Relaxed</option></select><button class="ui" id="soundBtn">♪ On</button><button class="ui" id="editBtn">✎ Editor</button></div></header>
+<div class="screen" id="screen"><canvas id="game" width="672" height="418" aria-label="Gold Runner game board"></canvas><div class="cover" id="cover"><div class="coverInner"><div class="kicker">WELCOME TO THE EIGHTIES</div><h2 id="coverTitle">GOLD RUNNER</h2><p id="coverText">Collect every gold bar. Outwit the red guards. Dig temporary holes in the brick floor. When all the gold is yours, climb the escape ladder at the top.</p><button id="coverBtn">PLAY LEVEL 1</button></div></div></div>
+<div class="stats"><div>STAGE <b id="stageText">001 / 150</b></div><div>GOLD <b id="goldText">00</b></div><div>SCORE <b id="scoreText">000000</b></div><div>LIVES <b id="livesText">♥♥♥♥♥</b></div><div>BEST <b id="bestText">000000</b></div></div>
+<div class="controls" id="touchControls"><div class="dpad"><button class="touch" data-key="up" aria-label="Climb up">▲</button><button class="touch" data-key="left" aria-label="Move left">◀</button><span class="mid">✦</span><button class="touch" data-key="right" aria-label="Move right">▶</button><button class="touch" data-key="down" aria-label="Climb down">▼</button></div><div class="digbtns"><button class="touch dig" data-key="digLeft" aria-label="Dig left">↙<span>DIG LEFT</span></button><button class="touch dig" data-key="digRight" aria-label="Dig right">↘<span>DIG RIGHT</span></button></div></div>
+<p class="help"><strong>Keyboard:</strong> Arrow keys / WASD to move · <strong>Z</strong> dig left · <strong>X</strong> dig right · <strong>P</strong> pause · <strong>R</strong> retry. On iPad, hold the on-screen buttons.</p>
+<div class="editor" id="editor"><b>LEVEL EDITOR</b> <span style="color:#aabede;font-size:12px">— tap or drag on board to draw.</span><div class="toolrow" id="toolrow"></div><div class="edactions"><button class="ui main" id="testBtn">▶ Play my level</button><button class="ui" id="saveBtn">Save locally</button><button class="ui" id="loadBtn">Load saved</button><button class="ui" id="exportBtn">Export design</button><button class="ui" id="importBtn">Import design</button><button class="ui" id="exitEditBtn">Back to campaign</button></div><textarea id="transfer" style="display:none" placeholder="Paste a level design here to import it, or copy this text to share your level."></textarea></div>
+<div class="toast" id="toast" aria-live="polite"></div><footer class="foot">An original browser recreation of classic 1983-era puzzle-platform mechanics. New code, graphics and generated stages; not the original Brøderbund game or its 150 original level layouts. Runs offline once saved.</footer>
+</main><script>
+'use strict';
+(()=>{
+const W=28,H=16,T=24,HUD=34,CW=W*T,CH=HUD+H*T;
+const C=document.getElementById('game'),ctx=C.getContext('2d',{alpha:false});ctx.imageSmoothingEnabled=false;
+const $=id=>document.getElementById(id), cover=$('cover'),coverTitle=$('coverTitle'),coverText=$('coverText'),coverBtn=$('coverBtn');
+const EMPTY='.',BRICK='#',ROCK='X',LADDER='H',ROPE='-',TRAP='T',EXIT='S';
+let stage=1,score=0,lives=5,best=0,tick=0,goldTaken=0,remaining=0,mode='classic';
+let map=[],gold=[],guards=[],holes=new Map(),player={x:2,y:14},spawn={x:2,y:14},stageStart=null, exitOpen=false;
+let state='menu',custom=false,editing=false,design=null,selectedTool='brick',keys=new Set(),digCooldown=0,soundOn=true,toastTimer=0,animationTime=0,accumulator=0,lastRAF=0,deathCool=0;
+let touchPointers=new Map(),audio=null,guardId=0;
+const safeGet=(k)=>{try{return localStorage.getItem(k)}catch{return null}};
+const safeSet=(k,v)=>{try{localStorage.setItem(k,v)}catch{}};
+best=Number(safeGet('gold_runner_best')||0)||0;
+const clone=o=>JSON.parse(JSON.stringify(o));
+function seeded(n){let v=(n*39821+1983)>>>0;return()=>{v^=v<<13;v^=v>>>17;v^=v<<5;return(v>>>0)/4294967296}}
+function mkEmpty(){return Array.from({length:H},()=>Array(W).fill('.'))}
+function inBounds(x,y){return x>=0&&x<W&&y>=0&&y<H}
+function key(x,y){return x+','+y}
+function get(x,y){return inBounds(x,y)?map[y][x]:ROCK}
+function terrainSolid(t){return t===BRICK||t===ROCK}
+function solid(x,y){return !inBounds(x,y)||terrainSolid(get(x,y))}
+function ladder(x,y){return get(x,y)===LADDER||(exitOpen&&get(x,y)===EXIT)}
+function rope(x,y){return get(x,y)===ROPE}
+function goldAt(x,y){return gold.findIndex(g=>g.x===x&&g.y===y)}
+function holeAt(x,y){return holes.get(key(x,y))}
+function levelGenerator(n){
+ const rng=seeded(n),b=mkEmpty();
+ for(let x=0;x<W;x++)b[15][x]=BRICK;
+ for(const y of [3,6,9,12])for(let x=1;x<27;x++)b[y][x]=BRICK;
+ const steps=[{hi:12,lo:15,cols:[3+(n%3),21-(n%3)]},
+ {hi:9,lo:12,cols:[7+(n%2),19-(n%3)]},
+ {hi:6,lo:9,cols:[4+(n%4),23-(n%3)]},
+ {hi:3,lo:6,cols:[9-(n%3),19+(n%3)]}];
+ for(const s of steps)for(const x of s.cols)for(let y=s.hi-1;y<s.lo;y++)b[y][x]=LADDER;
+ // Each platform has safe ladders, side paths, a few short missing-brick spans and rope bridges.
+ if(n>1){for(let i=0;i<Math.min(4,1+Math.floor(n/5));i++){
+   const y=[6,9,12][(i+n)%3],len=2+Math.floor(rng()*3),x=9+Math.floor(rng()*9);
+   let ok=true;for(let j=x-1;j<x+len+1;j++)if(b[y][j]===LADDER)ok=false;
+   if(ok){for(let j=x;j<x+len;j++)b[y][j]='.';
+      if(i%2===0)for(let j=x-1;j<x+len+1;j++)if(b[y-1][j]==='.')b[y-1][j]=ROPE;
+   }
+ }}
+ if(n>3){const count=Math.min(4,Math.floor(n/8)+1);for(let i=0;i<count;i++){
+   const y=[3,6,9,12][Math.floor(rng()*4)],x=10+Math.floor(rng()*9);
+   if(b[y][x]===BRICK&&b[y][x-1]===BRICK&&b[y][x+1]===BRICK)b[y][x]= i%3===0?ROCK:TRAP;
+ }}
+ // Some ropes crossing open air, suspended between supported platforms.
+ for(let i=0;i<2;i++){
+   const y=[2,5,8,11][(i+n)%4],x=10+Math.floor(rng()*9);
+   for(let xx=x;xx<Math.min(x+4,26);xx++)if(b[y][xx]==='.')b[y][xx]=ROPE;
+ }
+ for(let y=0;y<=2;y++)b[y][26]=EXIT;
+ // Keep generated gold in locations that the runner can actually reach without needing a risky dig.
+ const seen=new Set(),front=[{x:2,y:14}],where=(x,y)=>key(x,y),at=(x,y)=>inBounds(x,y)?b[y][x]:ROCK;
+ seen.add(where(2,14));
+ for(let head=0;head<front.length;head++){
+  const a=front[head],current=at(a.x,a.y),below=at(a.x,a.y+1);
+  const stand=current===LADDER||current===ROPE||terrainSolid(below);
+  const options=!stand?[[a.x,a.y+1]]:[[a.x-1,a.y],[a.x+1,a.y]];
+  if(stand){if(current===LADDER||at(a.x,a.y-1)===LADDER)options.push([a.x,a.y-1]);
+   if(current===LADDER||below===LADDER)options.push([a.x,a.y+1]);}
+  for(const [x,y] of options){if(!inBounds(x,y)||terrainSolid(at(x,y))||seen.has(where(x,y)))continue;seen.add(where(x,y));front.push({x,y});}
+ }
+ const occupied=new Set(['2,14']);let gg=[];
+ const byLane=[14,11,8,5,2],goldCount=5+Math.min(12,Math.floor((n-1)/5))+Math.floor(rng()*3);
+ let tries=0;
+ while(gg.length<goldCount&&tries++<500){
+   const y=byLane[Math.floor(rng()*byLane.length)];const x=2+Math.floor(rng()*23);const k=key(x,y);
+   if(occupied.has(k)||!seen.has(k)||b[y][x]!==EMPTY||!(terrainSolid(b[y+1][x])||b[y+1][x]===LADDER))continue;
+   occupied.add(k);gg.push({x,y});
+ }
+ const enemies=[];let enemCount=Math.min(6,2+Math.floor((n-1)/15));tries=0;
+ while(enemies.length<enemCount&&tries++<200){
+  const y=byLane[Math.floor(rng()*byLane.length)],x=11+Math.floor(rng()*15);
+  if(b[y][x]!==EMPTY||!(terrainSolid(b[y+1][x])||b[y+1][x]===LADDER)||occupied.has(key(x,y)))continue;
+  occupied.add(key(x,y));enemies.push({x,y,carried:false});
+ }
+ return {terrain:b,gold:gg,guards:enemies,spawn:{x:2,y:14}};
+}
+function applyLevel(spec){const d=clone(spec);map=d.terrain;gold=d.gold;guards=d.guards.map(a=>({...a,id:++guardId,trap:0,grace:0,carried:!!a.carried}));spawn=d.spawn;player={...spawn};holes.clear();tick=0;digCooldown=0;goldTaken=0;exitOpen=false;remainingGold();updateStats();}
+function remainingGold(){remaining=gold.length+guards.filter(g=>g.carried).length;if(editing){exitOpen=false;return remaining}if(remaining===0&&!exitOpen){exitOpen=true;if(state==='playing') {beep(784,.11,'square');setTimeout(()=>beep(1047,.14,'square'),140);notice('ALL GOLD COLLECTED — CLIMB TO THE TOP!')}}return remaining}
+function loadStage(n,forCustom=false){custom=forCustom;stage=Math.max(1,Math.min(150,n));stageStart=forCustom?clone(design):levelGenerator(stage);applyLevel(stageStart);$('levelSelect').value=String(stage);state='playing';editing=false;$('editor').classList.remove('active');hideCover();updateStats();}
+function showCover(title,msg,button){coverTitle.textContent=title;coverText.textContent=msg;coverBtn.textContent=button;cover.classList.remove('hidden')}
+function hideCover(){cover.classList.add('hidden')}
+function start(){if(editing)return;initAudio();if(state==='menu'||state==='gameover'){score=0;lives=5;loadStage(stage||1);return}if(state==='paused'){state='playing';hideCover();return}if(state==='playing'){hideCover();return}loadStage(stage)}
+function restart(){if(editing)return;initAudio();if(!stageStart)stageStart=levelGenerator(stage);applyLevel(stageStart);state='playing';hideCover();notice('LEVEL RESTARTED')}
+function togglePause(){if(editing)return;if(state==='playing'){state='paused';showCover('PAUSED','Time for a little nostalgia? Resume when you are ready.','RESUME')}else if(state==='paused'){if(deathCool){deathCool=0;restart()}else start()}}
+function die(){if(state!=='playing')return;beep(146,.3,'sawtooth');lives--;updateStats();if(lives<=0){state='gameover';showCover('GAME OVER','Your final score: '+String(score).padStart(6,'0')+'. Retry from the selected stage, or choose another level.','PLAY AGAIN')}else{state='paused';showCover('GUARD GOT YOU!',lives+' '+(lives===1?'life':'lives')+' remaining. The current level will restart.','TRY AGAIN');deathCool=1;} }
+function nextLevel(){beep(659,.12);setTimeout(()=>beep(988,.24),130);score+=1500;lives++;if(score>best){best=score;safeSet('gold_runner_best',best)}updateStats();if(custom){state='paused';showCover('LEVEL CLEAR!','You solved your own creation! Score '+score+'.','PLAY AGAIN');return}if(stage>=150){state='gameover';showCover('ALL 150 STAGES!','Congratulations! You cleared all the generated tribute stages.','PLAY AGAIN');return}stage++;safeSet('gold_runner_stage',stage);loadStage(stage);state='paused';showCover('STAGE CLEAR!','Bonus +1500 points and +1 life. Ready for stage '+String(stage).padStart(3,'0')+'?','NEXT STAGE')}
+function updateStats(){$('stageText').textContent=String(stage).padStart(3,'0')+' / 150';$('goldText').textContent=String(remaining).padStart(2,'0');$('scoreText').textContent=String(score).padStart(6,'0');$('livesText').textContent=lives>0?'♥'.repeat(Math.min(lives,9))+(lives>9?'+'+(lives-9):''):'0';$('bestText').textContent=String(best).padStart(6,'0');$('startBtn').textContent=state==='playing'?'▶ Playing':'▶ Start';$('pauseBtn').textContent=state==='paused'?'▶ Resume':'Ⅱ Pause'}
+function notice(s){const e=$('toast');e.textContent=s;clearTimeout(toastTimer);toastTimer=setTimeout(()=>e.textContent='',2500)}
+function initAudio(){if(!soundOn)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume()}catch{soundOn=false}}
+function beep(freq,duration=.06,type='square'){if(!soundOn||!audio)return;try{const osc=audio.createOscillator(),gain=audio.createGain();osc.type=type;osc.frequency.value=freq;gain.gain.value=.035;gain.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);osc.connect(gain);gain.connect(audio.destination);osc.start();osc.stop(audio.currentTime+duration)}catch{}}
+function isSupported(a){if(a.grace>0)return true;if(rope(a.x,a.y)||ladder(a.x,a.y))return true;if(solid(a.x,a.y+1))return true;return guards.some(g=>g!==a&&g.trap>0&&g.x===a.x&&g.y===a.y+1)}
+function movesFrom(a){const options=[];if(!isSupported(a)){if(a.y+1<H&&!solid(a.x,a.y+1))return ['down'];return []}
+ for(const [key,dx,dy] of [['left',-1,0],['right',1,0]])if(inBounds(a.x+dx,a.y+dy)&&!solid(a.x+dx,a.y+dy))options.push(key);
+ if(a.y>0&&!solid(a.x,a.y-1)&&(ladder(a.x,a.y)||ladder(a.x,a.y-1)))options.push('up');
+ if(a.y<H-1&&!solid(a.x,a.y+1)&&(ladder(a.x,a.y)||ladder(a.x,a.y+1)))options.push('down');
+ return options;
+}
+const dirs={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]};
+function stepActor(a,dir){if(!movesFrom(a).includes(dir))return false;const [dx,dy]=dirs[dir];a.x+=dx;a.y+=dy;return true}
+function collectGold(){const idx=goldAt(player.x,player.y);if(idx>=0){gold.splice(idx,1);score+=250;goldTaken++;beep(650+goldTaken*17,.045);remainingGold();updateStats()}}
+function guardHit(){if(state!=='playing')return;for(const e of guards){if(e.trap<=0&&e.x===player.x&&e.y===player.y){die();return}}
+ if(exitOpen&&player.y===0&&get(player.x,player.y)===EXIT)nextLevel();}
+function playerTick(){
+ if(digCooldown>0)digCooldown--;
+ // Key and touch digging share a queue, with limited repeat to prevent accidental extra holes.
+ const d=keys.has('digLeft')?'digLeft':keys.has('digRight')?'digRight':null;
+ if(d&&digCooldown===0){dig(d==='digLeft'?-1:1);digCooldown=4}
+ const input=['up','down','left','right'].find(k=>keys.has(k));
+ if(!isSupported(player))stepActor(player,'down');
+ else if(input){const ok=stepActor(player,input);if(ok)collectGold()}
+ collectGold();guardHit();
+}
+function dig(dx){
+ if(!isSupported(player))return;
+ const x=player.x+dx,y=player.y+1;
+ if(!inBounds(x,y)||!inBounds(x,y-1)||get(x,y)!==BRICK||solid(x,y-1))return;
+ map[y][x]=EMPTY;holes.set(key(x,y),{x,y,life:78,max:78});beep(200,.045,'sawtooth');
+}
+function BFSGuard(g){
+ const start=key(g.x,g.y),q=[{x:g.x,y:g.y,first:null}],seen=new Set([start]);let chosen=null,bestCost=999,bestFirst=null;
+ for(let head=0;head<q.length&&head<550;head++){
+  const cur=q[head],dist=Math.abs(player.x-cur.x)+Math.abs(player.y-cur.y),cost=head===0?dist:dist;
+  if(cost<bestCost&&cur.first){bestCost=cost;bestFirst=cur.first}
+  if(cur.x===player.x&&cur.y===player.y){chosen=cur.first;break}
+  // Map physics on a simulated coordinate, including gravity, ladders and ropes.
+  const fake={x:cur.x,y:cur.y};let poss;
+  if(!(rope(fake.x,fake.y)||ladder(fake.x,fake.y)||solid(fake.x,fake.y+1))){poss=(!solid(fake.x,fake.y+1)&&fake.y+1<H)?['down']:[]}
+  else{
+   poss=[];
+   for(const dir of ['left','right']){const d=dirs[dir],xx=fake.x+d[0];if(inBounds(xx,fake.y)&&!solid(xx,fake.y))poss.push(dir)}
+   if(fake.y>0&&!solid(fake.x,fake.y-1)&&(ladder(fake.x,fake.y)||ladder(fake.x,fake.y-1)))poss.push('up');
+   if(fake.y<H-1&&!solid(fake.x,fake.y+1)&&(ladder(fake.x,fake.y)||ladder(fake.x,fake.y+1)))poss.push('down');
+  }
+  for(const dir of poss){const d=dirs[dir],x=cur.x+d[0],y=cur.y+d[1],id=key(x,y);if(!seen.has(id)){seen.add(id);q.push({x,y,first:cur.first||dir})}}
+ }
+ return chosen||bestFirst||((player.x<g.x)?'left':'right');
+}
+function guardTick(g){
+ if(g.trap>0){g.trap--;if(g.trap===0){const above={x:g.x,y:g.y-1};if(inBounds(above.x,above.y)&&!solid(above.x,above.y)&&!(player.x===above.x&&player.y===above.y)){g.y--;g.grace=2}else g.trap=3}return}
+ if(g.grace>0)g.grace--;
+ if(!isSupported(g)){stepActor(g,'down')}else{
+  const dir=BFSGuard(g);if(dir)stepActor(g,dir);
+ }
+ const h=holeAt(g.x,g.y);
+ if(h){g.trap=20;g.grace=0;score+=75;beep(170,.08);if(g.carried){g.carried=false;const y=Math.max(0,g.y-1);if(goldAt(g.x,y)<0)gold.push({x:g.x,y});}updateStats();}
+ if(!g.carried&&g.trap===0){const i=goldAt(g.x,g.y);if(i>=0&&Math.random()<.32){gold.splice(i,1);g.carried=true;updateStats()}}
+ }
+function respawnGuard(g){const spots=[];for(let y=1;y<=5;y++)for(let x=2;x<26;x++)if(!solid(x,y)&&(solid(x,y+1)||ladder(x,y+1))&&(player.x!==x||player.y!==y))spots.push({x,y});if(spots.length){const p=spots[(tick*43+g.id*19)%spots.length];g.x=p.x;g.y=p.y}else{g.x=24;g.y=14}g.trap=0;g.grace=1}
+function updateHoles(){for(const [k,h] of holes){h.life--;if(h.life<=0){holes.delete(k);map[h.y][h.x]=BRICK;if(player.x===h.x&&player.y===h.y){die();return}for(const g of guards)if(g.x===h.x&&g.y===h.y){if(g.carried){g.carried=false;gold.push({x:g.x,y:Math.max(0,g.y-1)})}score+=75;respawnGuard(g)} }}}
+function gameTick(){if(state!=='playing'||editing)return;
+ tick++;updateHoles();if(state!=='playing')return;
+ playerTick();if(state!=='playing')return;
+ const speed=mode==='relaxed'?3:2;
+ if(tick%speed===0){for(const g of guards){guardTick(g);if(state!=='playing')return;guardHit();if(state!=='playing')return}}
+ if(score>best){best=score;safeSet('gold_runner_best',best)}updateStats();
+}
+// --- Drawing: all sprites and scenery created with canvas primitives, no borrowed graphics. ---
+function px(x,y,w,h,color){ctx.fillStyle=color;ctx.fillRect(Math.round(x),Math.round(y),w,h)}
+function drawBrick(x,y,fade=1){const X=x*T,Y=HUD+y*T;px(X,Y,T,T,'#602e28');px(X+1,Y+1,22,21,'#ae5e39');px(X+2,Y+2,20,3,'#dd9658');px(X+3,Y+10,19,2,'#5e332c');px(X+12,Y+1,2,11,'#603329');px(X+1,Y+20,22,2,'#562a27');px(X+5,Y+12,2,9,'#622e28');px(X+16,Y+12,2,9,'#622e28');if(fade<1)px(X+1,Y+1,22,21,'#744c34')}
+function drawRock(x,y){const X=x*T,Y=HUD+y*T;px(X,Y,T,T,'#152f73');px(X+2,Y+1,20,21,'#2a57ae');px(X+2,Y+2,17,4,'#6a9ed8');px(X+2,Y+10,20,3,'#193c8d');px(X+11,Y+1,2,12,'#173875');px(X+5,Y+14,12,3,'#173d88')}
+function drawLadder(x,y,opacity=1){const X=x*T,Y=HUD+y*T;ctx.globalAlpha=opacity;px(X+5,Y,4,T,'#c4c95f');px(X+16,Y,4,T,'#b6bb52');for(let yy=4;yy<24;yy+=7)px(X+5,Y+yy,15,3,'#f0e27c');ctx.globalAlpha=1}
+function drawRope(x,y){const X=x*T,Y=HUD+y*T;px(X,Y+7,24,3,'#b38a55');px(X,Y+8,24,1,'#f4d58a');px(X+6,Y+8,2,7,'#8d714c');px(X+17,Y+8,2,7,'#8d714c')}
+function drawGold(x,y){const X=x*T,Y=HUD+y*T;px(X+4,Y+11,17,8,'#a16415');px(X+5,Y+9,16,8,'#f6bb35');px(X+8,Y+6,12,6,'#ffe48a');px(X+7,Y+9,10,2,'#fff3ae');px(X+15,Y+13,3,3,'#fff5af');px(X+5,Y+18,15,2,'#75421a')}
+function drawActor(x,y,isGuard=false,walking=0,stuck=false){const X=x*T,Y=HUD+y*T;const c=isGuard?'#f25f72':'#73eaff',dark=isGuard?'#9f2d4d':'#177dad',skin=isGuard?'#ffd7a3':'#ffdaaa';if(stuck)px(X+4,Y+1,16,3,'#ffe16b');px(X+8,Y+2,9,7,skin);px(X+7,Y+1,11,3,c);px(X+10,Y+6,3,2,'#0b1426');px(X+7,Y+10,11,7,c);px(X+6,Y+11,2,7,dark);px(X+18,Y+11,2,7,dark);if(walking%2){px(X+7,Y+17,4,6,c);px(X+15,Y+17,4,4,c)}else{px(X+7,Y+17,4,4,c);px(X+14,Y+17,4,6,c)}}
+function draw(){const grad=ctx.createLinearGradient(0,0,0,CH);grad.addColorStop(0,'#0a153c');grad.addColorStop(1,'#06091d');ctx.fillStyle=grad;ctx.fillRect(0,0,CW,CH);
+ px(0,0,CW,HUD-1,'#0d1535');px(0,HUD-2,CW,2,'#41598d');
+ ctx.fillStyle='#ffe07c';ctx.textBaseline='middle';ctx.font='bold 16px monospace';ctx.fillText('GOLD RUNNER',10,15);ctx.fillStyle='#a5bee7';ctx.font='12px monospace';ctx.fillText('STAGE '+String(stage).padStart(3,'0'),190,15);ctx.fillText('GOLD '+remaining,330,15);ctx.fillText('LIVES '+lives,440,15);ctx.fillText(exitOpen?'EXIT OPEN':'FIND GOLD',552,15);
+ for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+  const t=map[y]?.[x]||EMPTY;if(t===BRICK)drawBrick(x,y);else if(t===ROCK)drawRock(x,y);else if(t===LADDER)drawLadder(x,y);else if(t===ROPE)drawRope(x,y);else if(t===TRAP)drawBrick(x,y,.8);else if(t===EXIT&&(exitOpen||editing))drawLadder(x,y,editing?.45:.9);
+ }
+ for(const h of holes.values())if(h.life<22&&(h.life%8)<4){px(h.x*T+1,HUD+h.y*T+2,22,20,'#69391e');px(h.x*T+4,HUD+h.y*T+8,16,3,'#e9a04c')}
+ for(const g of gold)drawGold(g.x,g.y);
+ for(const g of guards)drawActor(g.x,g.y,true,tick%4,g.trap>0);
+ drawActor(player.x,player.y,false,tick%4);
+ if(editing){ctx.strokeStyle='#314871';ctx.lineWidth=1;ctx.beginPath();for(let x=0;x<=W;x++){ctx.moveTo(x*T+.5,HUD);ctx.lineTo(x*T+.5,CH)}for(let y=0;y<=H;y++){ctx.moveTo(0,HUD+y*T+.5);ctx.lineTo(CW,HUD+y*T+.5)}ctx.stroke();px(0,0,168,HUD-2,'#253968');ctx.fillStyle='#ffe59e';ctx.font='bold 13px monospace';ctx.fillText('EDITOR — '+selectedTool.toUpperCase(),6,15)}
+}
+function frame(now){let delta=Math.min(80,now-lastRAF||0);lastRAF=now;accumulator+=delta;if(accumulator>360)accumulator=0;while(accumulator>=94){gameTick();accumulator-=94}draw();requestAnimationFrame(frame)}
+function setKey(k,on){if(on)keys.add(k);else keys.delete(k)}
+const keyMap={ArrowUp:'up',ArrowDown:'down',ArrowLeft:'left',ArrowRight:'right',w:'up',W:'up',s:'down',S:'down',a:'left',A:'left',d:'right',D:'right',z:'digLeft',Z:'digLeft',x:'digRight',X:'digRight'};
+window.addEventListener('keydown',e=>{if(document.activeElement?.tagName==='TEXTAREA'||document.activeElement?.tagName==='SELECT')return;let k=keyMap[e.key];if(k){e.preventDefault();setKey(k,true);if(state==='menu')start()}else if(e.key.toLowerCase()==='p'){e.preventDefault();togglePause()}else if(e.key.toLowerCase()==='r'){e.preventDefault();restart()} });
+window.addEventListener('keyup',e=>{const k=keyMap[e.key];if(k){e.preventDefault();setKey(k,false)}});
+window.addEventListener('blur',()=>{keys.clear();document.querySelectorAll('.touch').forEach(e=>e.classList.remove('pressed'))});
+for(const btn of document.querySelectorAll('[data-key]')){
+ btn.addEventListener('pointerdown',e=>{e.preventDefault();initAudio();if(!editing&&state==='menu')start();const k=btn.dataset.key;btn.classList.add('pressed');setKey(k,true);touchPointers.set(e.pointerId,k);try{btn.setPointerCapture(e.pointerId)}catch{}});
+ const release=e=>{const k=touchPointers.get(e.pointerId);if(k){touchPointers.delete(e.pointerId);if(![...touchPointers.values()].includes(k))setKey(k,false)}btn.classList.remove('pressed')};
+ btn.addEventListener('pointerup',release);btn.addEventListener('pointercancel',release);btn.addEventListener('lostpointercapture',release);
+}
+coverBtn.addEventListener('click',()=>{if(deathCool){deathCool=0;restart()}else if(state==='gameover'){score=0;lives=5;loadStage(stage)}else if(state==='paused'){state='playing';hideCover();updateStats()}else start()});
+$('startBtn').addEventListener('click',()=>{if(state==='paused'&&deathCool){deathCool=0;restart()}else start()});
+$('pauseBtn').addEventListener('click',togglePause);$('restartBtn').addEventListener('click',restart);
+$('soundBtn').addEventListener('click',()=>{soundOn=!soundOn;$('soundBtn').textContent=soundOn?'♪ On':'♪ Off';if(soundOn)initAudio()});
+$('modeSelect').addEventListener('change',e=>{mode=e.target.value;notice(mode==='relaxed'?'GUARDS MOVE SLOWER':'CLASSIC SPEED')});
+$('levelSelect').addEventListener('change',e=>{if(editing)leaveEditor();stage=Number(e.target.value)||1;score=0;lives=5;loadStage(stage);notice('STAGE '+stage)});
+function populateLevels(){for(let n=1;n<=150;n++){const option=document.createElement('option');option.value=n;option.textContent='Level '+String(n).padStart(3,'0');$('levelSelect').appendChild(option)}}
+// Editor, custom designs and import/export
+const tools=[['brick','▦ Brick'],['rock','▣ Rock'],['ladder','Ｈ Ladder'],['rope','━ Rope'],['trap','▥ False floor'],['gold','◆ Gold'],['guard','☠ Guard'],['player','● Start'],['exit','⇧ Exit'],['erase','⌫ Erase']];
+for(const [id,name]of tools){const b=document.createElement('button');b.className='tool';b.textContent=name;b.dataset.tool=id;b.addEventListener('click',()=>{selectedTool=id;renderTools()});$('toolrow').appendChild(b)}
+function renderTools(){document.querySelectorAll('.tool').forEach(b=>b.classList.toggle('active',b.dataset.tool===selectedTool))}
+function enterEditor(){if(editing)return;editing=true;state='paused';hideCover();design={terrain:clone(map),gold:clone(gold),guards:guards.map(g=>({x:g.x,y:g.y})),spawn:clone(spawn)};selectedTool='brick';renderTools();$('editor').classList.add('active');notice('TAP THE BOARD TO DRAW. ADD PLAYER + GOLD.');}
+function leaveEditor(){editing=false;$('editor').classList.remove('active');loadStage(stage,false)}
+function paint(x,y){if(!editing||!inBounds(x,y))return;
+ gold=gold.filter(g=>g.x!==x||g.y!==y);guards=guards.filter(g=>g.x!==x||g.y!==y);
+ switch(selectedTool){case'brick':map[y][x]=BRICK;break;case'rock':map[y][x]=ROCK;break;case'ladder':map[y][x]=LADDER;break;case'rope':map[y][x]=ROPE;break;case'trap':map[y][x]=TRAP;break;case'gold':map[y][x]=EMPTY;gold.push({x,y});break;case'guard':map[y][x]=EMPTY;guards.push({x,y,id:++guardId,trap:0,grace:0,carried:false});break;case'player':map[y][x]=EMPTY;player={x,y};spawn={x,y};break;case'exit':map[y][x]=EXIT;break;case'erase':map[y][x]=EMPTY;break;}
+ remainingGold();design={terrain:clone(map),gold:clone(gold),guards:guards.map(g=>({x:g.x,y:g.y})),spawn:clone(spawn)};
+}
+function pointForPointer(e){const r=C.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*CW,py=(e.clientY-r.top)/r.height*CH-HUD;return [Math.floor(px/T),Math.floor(py/T)]}
+let drawing=false;C.addEventListener('pointerdown',e=>{if(!editing)return;e.preventDefault();drawing=true;try{C.setPointerCapture(e.pointerId)}catch{}paint(...pointForPointer(e))});C.addEventListener('pointermove',e=>{if(editing&&drawing)paint(...pointForPointer(e))});C.addEventListener('pointerup',()=>{drawing=false});C.addEventListener('pointercancel',()=>{drawing=false});
+function validDesign(d){return d&&Array.isArray(d.terrain)&&d.terrain.length===H&&d.terrain.every(row=>Array.isArray(row)&&row.length===W&&row.every(cell=>typeof cell==='string'&&' .#XH-TS'.includes(cell)))&&Array.isArray(d.gold)&&Array.isArray(d.guards)&&d.spawn&&Number.isInteger(d.spawn.x)&&inBounds(d.spawn.x,d.spawn.y)}
+function editorSpec(){return {terrain:clone(map),gold:clone(gold),guards:guards.map(g=>({x:g.x,y:g.y})),spawn:clone(spawn)}}
+$('editBtn').addEventListener('click',()=>{if(editing)leaveEditor();else enterEditor()});$('exitEditBtn').addEventListener('click',leaveEditor);
+$('testBtn').addEventListener('click',()=>{const d=editorSpec();if(!d.gold.length){notice('ADD AT LEAST ONE GOLD BAR');return}design=d;score=0;lives=5;loadStage(stage,true);notice('PLAYING YOUR CUSTOM LEVEL')});
+$('saveBtn').addEventListener('click',()=>{safeSet('gold_runner_custom',JSON.stringify(editorSpec()));notice('SAVED IN THIS BROWSER')});
+$('loadBtn').addEventListener('click',()=>{try{const d=JSON.parse(safeGet('gold_runner_custom'));if(!validDesign(d))throw Error('Invalid level');applyLevel(d);design=clone(d);editing=true;state='paused';notice('SAVED DESIGN LOADED')}catch{notice('NO SAVED DESIGN FOUND')}});
+$('exportBtn').addEventListener('click',()=>{$('transfer').style.display='block';$('transfer').value=JSON.stringify(editorSpec());$('transfer').focus();$('transfer').select();notice('COPY THE TEXT TO SHARE YOUR LEVEL')});
+$('importBtn').addEventListener('click',()=>{const el=$('transfer');if(el.style.display==='none'){el.style.display='block';el.value='';el.focus();notice('PASTE LEVEL JSON, THEN PRESS IMPORT AGAIN');return}try{const d=JSON.parse(el.value);if(!validDesign(d))throw Error();applyLevel(d);design=clone(d);editing=true;state='paused';notice('IMPORTED — EDIT OR PLAY')}catch{notice('PASTE A VALID EXPORTED LEVEL JSON')}});
+// Bootstrap
+populateLevels();stage=Math.min(150,Math.max(1,Number(safeGet('gold_runner_stage')||1)||1));stageStart=levelGenerator(stage);applyLevel(stageStart);$('levelSelect').value=String(stage);state='menu';showCover('GOLD RUNNER','The 1983 puzzle-platform magic, rebuilt for your browser: dig into bricks, trap guards, collect gold, and escape. Choose any of 150 new stages or make your own.','PLAY LEVEL '+stage);requestAnimationFrame(frame);
+})();
+</script></body></html>
