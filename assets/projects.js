@@ -99,9 +99,9 @@ tags: ['Tower defense', 'Strategy']
 },
 {
 id: 'retirement', title: 'Retirement Simulator', category: 'tools', icon: '↗', tone: 'blue',
-status: 'Live', version: 'v4.0.3', updated: 'Sep 2026', order: 70,
-description: 'An interactive BC retirement planning simulator for exploring assumptions, spending, portfolio allocations, taxes, and market outcomes.',
-short: 'Explore spending, taxes, portfolios, and market outcomes.',
+status: 'Live', version: 'v4.1', updated: 'Oct 2026', order: 70,
+description: 'A BC retirement planner with automatic retirement-age, sustainable-spending and multiyear withdrawal optimization.',
+short: 'Find a retirement age, spending budget, and withdrawal plan.',
 url: '/Retirement-simulatoor/', action: 'Open simulator', featured: true,
 tags: ['Finance', 'Planning']
 },
